@@ -61,61 +61,65 @@
   --text-paragraph1--line-height: 24px;
   --text-caption1: 12px;
   --text-caption1--line-height: 16px;
+
+  --shadow-custom: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 @layer components {
-  @layer components {
-    .heading1 {
-      @apply text-heading1 font-bold;
-    }
-    .heading2 {
-      @apply text-heading2 font-bold;
-    }
-    .heading3 {
-      @apply text-heading3 font-bold;
-    }
-    .heading4 {
-      @apply text-heading4 font-bold;
-    }
-    .heading5 {
-      @apply text-heading5 font-semibold;
-    }
-    .heading6 {
-      @apply text-heading6 font-semibold;
-    }
-    .heading7 {
-      @apply text-heading7 font-medium;
-    }
+  .heading1 {
+    @apply text-heading1 font-bold;
+  }
+  .heading2 {
+    @apply text-heading2 font-bold;
+  }
+  .heading3 {
+    @apply text-heading3 font-bold;
+  }
+  .heading4 {
+    @apply text-heading4 font-bold;
+  }
+  .heading5 {
+    @apply text-heading5 font-semibold;
+  }
+  .heading6 {
+    @apply text-heading6 font-semibold;
+  }
+  .heading7 {
+    @apply text-heading7 font-medium;
+  }
 
-    .body1 {
-      @apply text-body1 font-semibold;
-    }
-    .body1-light {
-      @apply text-body1 font-normal;
-    }
-    .body2 {
-      @apply text-body2 font-semibold;
-    }
-    .body2-light {
-      @apply text-body2 font-normal;
-    }
+  .body1 {
+    @apply text-body1 font-semibold;
+  }
+  .body1-light {
+    @apply text-body1 font-normal;
+  }
+  .body2 {
+    @apply text-body2 font-semibold;
+  }
+  .body2-light {
+    @apply text-body2 font-normal;
+  }
 
-    .paragraph1 {
-      @apply text-paragraph1 font-semibold;
-    }
-    .paragraph1-light {
-      @apply text-paragraph1 font-normal;
-    }
+  .paragraph1 {
+    @apply text-paragraph1 font-semibold;
+  }
+  .paragraph1-light {
+    @apply text-paragraph1 font-normal;
+  }
 
-    .caption1 {
-      @apply text-caption1 font-medium;
-    }
+  .caption1 {
+    @apply text-caption1 font-medium;
+  }
 
-    .paragraph1-underlined {
-      @apply text-paragraph1 font-normal underline;
-    }
-    .caption1-underlined {
-      @apply text-caption1 font-normal underline;
-    }
+  .paragraph1-underlined {
+    @apply text-paragraph1 font-normal underline;
+  }
+  .caption1-underlined {
+    @apply text-caption1 font-normal underline;
+  }
+
+  .base-input {
+    @apply flex w-full items-center rounded-sm p-3 gap-3;
   }
 }
