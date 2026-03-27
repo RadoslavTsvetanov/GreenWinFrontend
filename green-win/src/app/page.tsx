@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
 
 const steps = [
   {
@@ -140,8 +141,6 @@ export default function Home() {
           </div>
         </section>
 
-<<<<<<< Updated upstream
-=======
         <section
           id="efficiency"
           className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40"
@@ -176,14 +175,43 @@ export default function Home() {
         </section>
 
         <section id="advantages" className="w-auto px-24 py-20">
-          <div className="grid grid-cols-[1fr_80px_1fr]">
-            <div className="p-12 flex flex-row gap-10 bg-base-100"></div>
-            <div className="p-12 flex flex-row w-20 h-18 gap-10 bg-base-100"></div>
-            <div className="p-12 flex flex-row gap-10 bg-base-100"></div>
+          <div className="px-10 w-fit">
+            <div className="bg-secondary-900 px-10 py-5 rounded-t-lg">
+              <p className="heading5 text-base-100">Advantages</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-[1fr_80px_1fr] items-center">
+            <div className="p-12 flex flex-row gap-10 bg-base-100 rounded-lg">
+              <div className="flex flex-col gap-4">
+                <p className="heading6 text-secondary-900">
+                  ESG-Ready Reporting
+                </p>
+                <p className="paragraph1-light text-base-700">
+                  Export detailed reports documenting every kilogram of CO2
+                  prevented by your compute operations.
+                </p>
+              </div>
+              <img src="/Stat.svg" alt="Stat" className="w-50" />
+            </div>
+
+            <div className="p-12 flex justify-center items-center w-20 h-18 bg-base-100"></div>
+
+            <div className="p-12 h-full flex flex-row gap-10 justify-center items-center bg-secondary-900 rounded-lg">
+              <div className="w-30 h-20 rounded-lg bg-base-100/10 grid place-items-center">
+                <img src="/Clock.svg" alt="Clock" className="w-10" />
+              </div>
+              <div className="flex flex-col gap-4">
+                <p className="heading6 text-base-100">Automated Scheduling</p>
+                <p className="paragraph1-light text-base-100">
+                  Set your deadline, and we’ll find the greenest window before
+                  your data is needed.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
->>>>>>> Stashed changes
         <footer className="border-t border-slate-200 px-6 py-6 text-xs text-slate-500 sm:px-10">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2">
             <p>GreenWin • Carbon-aware cloud orchestration</p>
