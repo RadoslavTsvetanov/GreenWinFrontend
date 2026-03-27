@@ -140,6 +140,50 @@ export default function Home() {
           </div>
         </section>
 
+<<<<<<< Updated upstream
+=======
+        <section
+          id="efficiency"
+          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40"
+        >
+          <div className="text-center gap-6 flex flex-col items-center justify-center">
+            <p className="heading2 text-base-800">Efficiency By Design</p>
+            <p className="body2-light text-base-700 max-w-3xl">
+              Our intelligent engine continuously monitors global power grids to
+              ensure your compute power leaves zero traces.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <HowItWorksCard
+              title="Real-time carbon mapping"
+              description="Continuously evaluates regions and providers based on cleaner energy mix."
+              number={1}
+              icon="/File.svg"
+            />
+            <HowItWorksCard
+              title="Automatic scheduling"
+              description="Decides immediate run or delayed execution windows against your deadlines."
+              number={2}
+              icon="/Analysis.svg"
+            />
+            <HowItWorksCard
+              title="Cost and impact reporting"
+              description="Keeps status, region and estimated CO2 savings in one management workspace."
+              number={3}
+              icon="/Flash.svg"
+            />
+          </div>
+        </section>
+
+        <section id="advantages" className="w-auto px-24 py-20">
+          <div className="grid grid-cols-[1fr_80px_1fr]">
+            <div className="p-12 flex flex-row gap-10 bg-base-100"></div>
+            <div className="p-12 flex flex-row w-20 h-18 gap-10 bg-base-100"></div>
+            <div className="p-12 flex flex-row gap-10 bg-base-100"></div>
+          </div>
+        </section>
+
+>>>>>>> Stashed changes
         <footer className="border-t border-slate-200 px-6 py-6 text-xs text-slate-500 sm:px-10">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2">
             <p>GreenWin • Carbon-aware cloud orchestration</p>
