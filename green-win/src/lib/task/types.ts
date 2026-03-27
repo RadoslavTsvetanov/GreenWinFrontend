@@ -15,9 +15,7 @@ export type TaskFormState = {
 export type CreateTaskPayload = {
   name: string;
   description?: string;
-  codeType: "lambda" | "docker";
   dockerImage?: string;
-  ownerId: string;
   projectId: string;
   latestFinishAt?: string;
 };

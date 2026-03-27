@@ -27,8 +27,6 @@ export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
   const payload: CreateTaskPayload = {
     name: form.taskName.trim(),
     description: form.notes.trim() || undefined,
-    codeType: form.runtimeType === "lambda_code" ? "lambda" : "docker",
-    ownerId: session.user.id,
     projectId: form.projectId,
   };
 

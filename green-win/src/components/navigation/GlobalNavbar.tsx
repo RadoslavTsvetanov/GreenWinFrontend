@@ -14,6 +14,7 @@ export function GlobalNavbar() {
 
   const isHome = pathname === "/";
   const isTasksRoute = pathname.startsWith("/tasks");
+  const isDashboardRoute = pathname.startsWith("/dashboard");
   const isProjectsRoute = pathname.startsWith("/projects");
   const isAuthRoute = pathname.startsWith("/auth");
   const initials = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
@@ -67,6 +68,12 @@ export function GlobalNavbar() {
         ) : isAuthenticated ? (
           <div className="relative flex items-center gap-2" ref={menuRef}>
             <Link
+              href="/dashboard"
+              className={navLinkClass(isDashboardRoute)}
+            >
+              Dashboard
+            </Link>
+            <Link
               href="/tasks"
               className={navLinkClass(isTasksRoute)}
             >
@@ -108,6 +115,14 @@ export function GlobalNavbar() {
                     role="menuitem"
                   >
                     New task
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                    onClick={() => setIsMenuOpen(false)}
+                    role="menuitem"
+                  >
+                    Dashboard
                   </Link>
                   <Link
                     href="/"

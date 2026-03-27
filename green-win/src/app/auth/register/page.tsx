@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -8,7 +8,7 @@ import { register } from "@/lib/auth/api";
 import { useToast } from "@/components/ui/Toast";
 import { PageShell } from "@/components/ui/primitives";
 
-export default function RegisterPage() {
+function RegisterPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setSession } = useAuth();
@@ -65,5 +65,21 @@ export default function RegisterPage() {
         />
       </main>
     </PageShell>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <PageShell className="bg-gradient-to-b from-slate-50 via-emerald-50/30 to-cyan-50/35">
+          <main className="mx-auto flex min-h-[calc(100dvh-6rem)] w-full max-w-6xl items-center justify-center">
+            <p className="text-sm text-slate-600">Loading…</p>
+          </main>
+        </PageShell>
+      }
+    >
+      <RegisterPageContent />
+    </Suspense>
   );
 }
