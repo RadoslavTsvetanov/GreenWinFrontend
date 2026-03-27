@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
 
 const steps = [
   {
@@ -141,136 +140,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section
-          id="features"
-          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40"
-        >
-          <div className="text-center gap-6 flex flex-col items-center justify-center">
-            <p className="heading2 text-base-800">Efficiency By Design</p>
-            <p className="body2-light text-base-700 max-w-3xl">
-              Our intelligent engine continuously monitors global power grids to
-              ensure your compute power leaves zero traces.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <HowItWorksCard
-              title="Real-time carbon mapping"
-              description="Continuously evaluates regions and providers based on cleaner energy mix."
-              number={1}
-              icon="/File.svg"
-            />
-            <HowItWorksCard
-              title="Automatic scheduling"
-              description="Decides immediate run or delayed execution windows against your deadlines."
-              number={2}
-              icon="/Analysis.svg"
-            />
-            <HowItWorksCard
-              title="Cost and impact reporting"
-              description="Keeps status, region and estimated CO2 savings in one management workspace."
-              number={3}
-              icon="/Flash.svg"
-            />
-          </div>
-        </section>
-
-        <section
-          id="workflow"
-          className="bg-[#07121f] py-20 text-white sm:py-24"
-        >
-          <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-2">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
-                Integrated workflow
-              </p>
-              <h2 className="mt-2 text-4xl font-semibold tracking-tight">
-                Operational orchestration for backend teams
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-slate-300">
-                From upload to execution and reporting, GreenWin gives your team
-                a clear carbon-aware path.
-              </p>
-              <ol className="mt-6 space-y-3">
-                {steps.map((step, index) => (
-                  <li key={step.title} className="rounded-xl bg-white/5 p-4">
-                    <p className="text-sm font-semibold text-white">
-                      {index + 1}. {step.title}
-                    </p>
-                    <p className="mt-1 text-sm text-slate-300">
-                      {step.description}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <div className="rounded-3xl bg-white p-6 text-slate-900 shadow-lg">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">
-                Job summary
-              </p>
-              <div className="mt-4 space-y-3 text-sm">
-                <CardRow label="Task" value="nightly-model-train" />
-                <CardRow label="Mode" value="Run by deadline" />
-                <CardRow
-                  label="Preferred regions"
-                  value="eu-central-1, europe-west1"
-                />
-                <CardRow
-                  label="Current best window"
-                  value="02:00 - 03:20 UTC"
-                />
-                <CardRow label="Estimated reduction" value="22% less CO2" />
-              </div>
-              <button className="mt-6 w-full rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">
-                Run with GreenWin
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-emerald-700 py-14 text-center text-white">
-          <div className="mx-auto w-full max-w-4xl px-6 sm:px-10">
-            <blockquote className="text-2xl font-medium leading-relaxed">
-              “Switching our batch processing to GreenWin reduced impact and
-              improved planning within one sprint.”
-            </blockquote>
-            <p className="mt-4 text-sm text-emerald-100">
-              — Hackathon pilot feedback
-            </p>
-          </div>
-        </section>
-
-        <section
-          id="cta"
-          className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-10 sm:py-20"
-        >
-          <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              Ready to launch?
-            </p>
-            <h2 className="mt-3 text-5xl font-semibold tracking-tight text-slate-900">
-              Ready for the Green Revolution?
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
-              Start with your first workload and let GreenWin orchestrate
-              greener execution from day one.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/tasks/new"
-                className="rounded-lg bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
-              >
-                Create first task
-              </Link>
-              <Link
-                href="/tasks"
-                className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                Open dashboard
-              </Link>
-            </div>
-          </div>
-        </section>
-
         <footer className="border-t border-slate-200 px-6 py-6 text-xs text-slate-500 sm:px-10">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2">
             <p>GreenWin • Carbon-aware cloud orchestration</p>
@@ -278,42 +147,6 @@ export default function Home() {
           </div>
         </footer>
       </main>
-    </div>
-  );
-}
-
-function Stat({ title, value }: { title: string; value: string }) {
-  return (
-    <article className="rounded-xl bg-white/85 p-3 shadow-sm">
-      <p className="text-[11px] uppercase tracking-wide text-slate-500">
-        {title}
-      </p>
-      <p className="mt-1 text-xl font-semibold text-slate-900">{value}</p>
-    </article>
-  );
-}
-
-function Panel({
-  className,
-  children,
-}: {
-  className: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <article className={`rounded-2xl p-6 shadow-sm ${className}`}>
-      {children}
-    </article>
-  );
-}
-
-function CardRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg bg-slate-50 px-3 py-2">
-      <p className="text-[11px] uppercase tracking-wide text-slate-500">
-        {label}
-      </p>
-      <p className="mt-1 font-semibold text-slate-900">{value}</p>
     </div>
   );
 }
