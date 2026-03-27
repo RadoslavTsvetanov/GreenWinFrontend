@@ -5,13 +5,15 @@ export type TaskStatus = "queued" | "scheduled" | "running" | "completed" | "fai
 export type ManagedTask = {
   id: string;
   name: string;
+  projectId: string | null;
+  projectName: string | null;
   status: TaskStatus;
   runtimeType: TaskRuntimeType;
   executionMode: TaskExecutionMode;
-  provider: "aws" | "gcp" | "azure";
-  region: string;
+  provider: string | null;
+  region: string | null;
   createdAt: string;
   deadline: string | null;
-  estimatedCo2SavedGrams: number;
+  estimatedCo2SavedGrams: number | null;
   notes: string;
 };

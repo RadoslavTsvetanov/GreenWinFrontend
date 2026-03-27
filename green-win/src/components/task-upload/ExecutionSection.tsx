@@ -1,5 +1,6 @@
 import { TaskFormState } from "@/lib/task/types";
 import { TaskFormChangeHandler } from "./types";
+import { Button, Input } from "@/components/ui/primitives";
 
 type ExecutionSectionProps = {
   form: TaskFormState;
@@ -12,28 +13,30 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
       <div>
         <p className="block text-sm font-medium text-slate-800">Execution mode *</p>
         <div className="mt-2 flex gap-3">
-          <button
+          <Button
             type="button"
             onClick={() => onChange("executionMode", "immediate")}
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+            variant="secondary"
+            className={`transition ${
               form.executionMode === "immediate"
-                ? "border-cyan-400 bg-cyan-100 text-cyan-900"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                ? "border border-cyan-500 bg-cyan-50 font-semibold text-slate-900 shadow-sm ring-1 ring-cyan-400 ring-offset-1 ring-offset-white"
+                : "border border-slate-200 bg-white font-medium text-slate-700 ring-0 hover:border-slate-300"
             }`}
           >
             Immediate
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={() => onChange("executionMode", "deadline")}
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+            variant="secondary"
+            className={`transition ${
               form.executionMode === "deadline"
-                ? "border-cyan-400 bg-cyan-100 text-cyan-900"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                ? "border border-cyan-500 bg-cyan-50 font-semibold text-slate-900 shadow-sm ring-1 ring-cyan-400 ring-offset-1 ring-offset-white"
+                : "border border-slate-200 bg-white font-medium text-slate-700 ring-0 hover:border-slate-300"
             }`}
           >
             Run by deadline
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -42,12 +45,12 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
           <label htmlFor="deadline" className="block text-sm font-medium text-slate-800">
             Latest execution time *
           </label>
-          <input
+          <Input
             id="deadline"
             type="datetime-local"
             value={form.deadline ?? ""}
-            onChange={(event) => onChange("deadline", event.target.value)}
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
+            onChange={(value) => onChange("deadline", value)}
+            className="mt-2 bg-slate-50 focus:border-cyan-500 focus:ring-cyan-100"
           />
         </div>
       )}

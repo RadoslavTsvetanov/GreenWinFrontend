@@ -1,3 +1,5 @@
+import { Button, InlineAlert } from "@/components/ui/primitives";
+
 type FormFeedbackProps = {
   isSubmitting: boolean;
   canSubmit: boolean;
@@ -13,23 +15,20 @@ export function FormFeedback({
 }: FormFeedbackProps) {
   return (
     <>
-      <button
+      <Button
         type="submit"
         disabled={!canSubmit || isSubmitting}
-        className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-100 transition hover:from-emerald-700 hover:to-cyan-700 disabled:cursor-not-allowed disabled:opacity-50"
+        variant="primary"
+        className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 py-3 text-white hover:from-emerald-700 hover:to-cyan-700"
       >
         {isSubmitting ? "Uploading..." : "Upload task"}
-      </button>
+      </Button>
 
       {errorMessage && (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-          {errorMessage}
-        </p>
+        <InlineAlert tone="error">{errorMessage}</InlineAlert>
       )}
       {successMessage && (
-        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-          {successMessage}
-        </p>
+        <InlineAlert tone="success">{successMessage}</InlineAlert>
       )}
     </>
   );
