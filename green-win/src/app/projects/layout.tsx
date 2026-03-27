@@ -4,7 +4,7 @@ import { ToastProvider } from "@/components/ui/Toast";
 import NavBar from "@/components/nav-bar/NavBar";
 import "../globals.css";
 
-export default function StatsLayout({
+export default function ProjectsLayout({
   children,
 }: {
   children: React.ReactNode;

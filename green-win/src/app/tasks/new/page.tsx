@@ -6,7 +6,10 @@ import { PayloadPreview } from "@/components/task-upload/PayloadPreview";
 import { TaskUploadForm } from "@/components/task-upload/TaskUploadForm";
 import { createTask } from "@/lib/task/api";
 import { INITIAL_TASK_FORM_STATE } from "@/lib/task/constants";
-import { buildCreateTaskPayload, canSubmitTaskForm } from "@/lib/task/validation";
+import {
+  buildCreateTaskPayload,
+  canSubmitTaskForm,
+} from "@/lib/task/validation";
 import { TaskFormState } from "@/lib/task/types";
 import { useToast } from "@/components/ui/Toast";
 import { fetchProjects, ProjectOption } from "@/lib/projects/api";
@@ -37,7 +40,10 @@ export default function NewTaskPage() {
     [form],
   );
 
-  const canSubmit = useMemo(() => canSubmitTaskForm(normalizedForm), [normalizedForm]);
+  const canSubmit = useMemo(
+    () => canSubmitTaskForm(normalizedForm),
+    [normalizedForm],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -104,9 +110,7 @@ export default function NewTaskPage() {
       router.replace(path);
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : "Unknown error during upload.";
+        error instanceof Error ? error.message : "Unknown error during upload.";
       setErrorMessage(message);
       showError(message);
     } finally {
@@ -119,23 +123,22 @@ export default function NewTaskPage() {
       <main className="mx-auto w-full max-w-6xl space-y-4">
         <BackLink href="/tasks" label="Back to tasks" />
         <PageHeader
-          eyebrow="Task setup"
           title="Create new task"
           subtitle="Define runtime and execution preferences, then upload your package."
         />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <TaskUploadForm
-          form={normalizedForm}
-          isSubmitting={isSubmitting}
-          canSubmit={canSubmit}
-          errorMessage={errorMessage}
-          successMessage={successMessage}
-          projects={projects}
-          isLoadingProjects={isLoadingProjects}
-          onSubmit={onSubmit}
-          onChange={onChange}
-        />
-        <PayloadPreview payloadPreview={payloadPreview} />
+          <TaskUploadForm
+            form={normalizedForm}
+            isSubmitting={isSubmitting}
+            canSubmit={canSubmit}
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+            projects={projects}
+            isLoadingProjects={isLoadingProjects}
+            onSubmit={onSubmit}
+            onChange={onChange}
+          />
+          <PayloadPreview payloadPreview={payloadPreview} />
         </div>
       </main>
     </PageShell>

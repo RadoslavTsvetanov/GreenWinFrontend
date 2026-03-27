@@ -7,14 +7,7 @@ import {
 } from "@/lib/organizations/dashboard";
 import { useRouter } from "next/dist/client/components/navigation";
 import { useEffect, useState } from "react";
-import {
-  Cell,
-  Pie,
-  PieChart,
-  RadialBar,
-  RadialBarChart,
-  ResponsiveContainer,
-} from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 const StatsPage = () => {
   const { user } = useAuth();

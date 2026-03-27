@@ -94,7 +94,9 @@ export default function TaskDetailsPage() {
       } catch (error) {
         if (!cancelled) {
           const message =
-            error instanceof Error ? error.message : "Failed to load task data.";
+            error instanceof Error
+              ? error.message
+              : "Failed to load task data.";
           showError(message);
         }
       } finally {
@@ -116,8 +118,9 @@ export default function TaskDetailsPage() {
       <main className="mx-auto w-full max-w-5xl space-y-4">
         <BackLink href="/tasks" label="Back to tasks" />
         <PageHeader
-          eyebrow="Task details"
-          title={isLoading ? "Loading task..." : task ? task.name : "Task not found"}
+          title={
+            isLoading ? "Loading task..." : task ? task.name : "Task not found"
+          }
           subtitle={`Task ID: ${taskId}`}
         />
 
@@ -135,105 +138,124 @@ export default function TaskDetailsPage() {
             </div>
 
             <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:grid-cols-3">
-            <QuickKpi
-              label="Provider"
-              value={task?.allowedCloudProviders?.[0]?.toUpperCase() ?? "N/A"}
-            />
-            <QuickKpi label="Region" value={task?.allowedRegions?.[0] ?? "N/A"} />
-            <QuickKpi
-              label="CO2 saved"
-              value="N/A"
-            />
+              <QuickKpi
+                label="Provider"
+                value={task?.allowedCloudProviders?.[0]?.toUpperCase() ?? "N/A"}
+              />
+              <QuickKpi
+                label="Region"
+                value={task?.allowedRegions?.[0] ?? "N/A"}
+              />
+              <QuickKpi label="CO2 saved" value="N/A" />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-            <Detail label="Runtime type" value={task.codeType ?? "N/A"} />
-            <Detail
-              label="Execution mode"
-              value={task.latestFinishAt ? "deadline" : "immediate"}
-            />
-            <Detail label="Provider" value={task.allowedCloudProviders?.[0] ?? "N/A"} />
-            <Detail label="Region" value={task.allowedRegions?.[0] ?? "N/A"} />
-            <Detail
-              label="Created at"
-              value={
-                task.createdAt ? new Date(task.createdAt).toLocaleString() : "N/A"
-              }
-            />
-            <Detail
-              label="Deadline"
-              value={
-                task
-                  ? task.latestFinishAt
-                    ? new Date(task.latestFinishAt).toLocaleString()
-                    : "No deadline"
-                  : "N/A"
-              }
-            />
-            <Detail label="Estimated CO2 saved" value="N/A" />
+              <Detail label="Runtime type" value={task.codeType ?? "N/A"} />
+              <Detail
+                label="Execution mode"
+                value={task.latestFinishAt ? "deadline" : "immediate"}
+              />
+              <Detail
+                label="Provider"
+                value={task.allowedCloudProviders?.[0] ?? "N/A"}
+              />
+              <Detail
+                label="Region"
+                value={task.allowedRegions?.[0] ?? "N/A"}
+              />
+              <Detail
+                label="Created at"
+                value={
+                  task.createdAt
+                    ? new Date(task.createdAt).toLocaleString()
+                    : "N/A"
+                }
+              />
+              <Detail
+                label="Deadline"
+                value={
+                  task
+                    ? task.latestFinishAt
+                      ? new Date(task.latestFinishAt).toLocaleString()
+                      : "No deadline"
+                    : "N/A"
+                }
+              />
+              <Detail label="Estimated CO2 saved" value="N/A" />
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Notes</p>
-            <p className="mt-2 text-sm leading-relaxed text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Notes
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-700">
                 {task.description || "No notes available."}
-            </p>
+              </p>
             </div>
 
             <TaskExecutionsPanel taskId={taskId} />
             <section className="grid gap-4 lg:grid-cols-2">
               <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Strategies
-              </p>
-              {isLoadingRelated ? (
-                  <p className="mt-2 text-sm text-slate-600">Loading strategies...</p>
-              ) : strategies.length === 0 ? (
-                  <p className="mt-2 text-sm text-slate-600">No strategies attached.</p>
-              ) : (
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Strategies
+                </p>
+                {isLoadingRelated ? (
+                  <p className="mt-2 text-sm text-slate-600">
+                    Loading strategies...
+                  </p>
+                ) : strategies.length === 0 ? (
+                  <p className="mt-2 text-sm text-slate-600">
+                    No strategies attached.
+                  </p>
+                ) : (
                   <div className="mt-3 space-y-2">
-                  {strategies.map((strategy) => (
-                    <div
-                      key={strategy.id}
-                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-                    >
-                      <p className="font-semibold text-slate-900">
-                        {strategy.type}
-                        {strategy.isActive ? " (active)" : ""}
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        {strategy.cronExpression || "No cron expression"}
-                      </p>
-                    </div>
-                  ))}
+                    {strategies.map((strategy) => (
+                      <div
+                        key={strategy.id}
+                        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <p className="font-semibold text-slate-900">
+                          {strategy.type}
+                          {strategy.isActive ? " (active)" : ""}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {strategy.cronExpression || "No cron expression"}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-              )}
+                )}
               </article>
               <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Checkpoints
-              </p>
-              {isLoadingRelated ? (
-                  <p className="mt-2 text-sm text-slate-600">Loading checkpoints...</p>
-              ) : checkpoints.length === 0 ? (
-                  <p className="mt-2 text-sm text-slate-600">No checkpoints for this task.</p>
-              ) : (
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Checkpoints
+                </p>
+                {isLoadingRelated ? (
+                  <p className="mt-2 text-sm text-slate-600">
+                    Loading checkpoints...
+                  </p>
+                ) : checkpoints.length === 0 ? (
+                  <p className="mt-2 text-sm text-slate-600">
+                    No checkpoints for this task.
+                  </p>
+                ) : (
                   <div className="mt-3 space-y-2">
-                  {checkpoints.map((checkpoint) => (
-                    <div
-                      key={checkpoint.id}
-                      className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-                    >
-                      <p className="truncate font-semibold text-slate-900">
-                        {checkpoint.uri}
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        Step {checkpoint.step ?? "-"} | Epoch {checkpoint.epoch ?? "-"}
-                      </p>
-                    </div>
-                  ))}
+                    {checkpoints.map((checkpoint) => (
+                      <div
+                        key={checkpoint.id}
+                        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                      >
+                        <p className="truncate font-semibold text-slate-900">
+                          {checkpoint.uri}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          Step {checkpoint.step ?? "-"} | Epoch{" "}
+                          {checkpoint.epoch ?? "-"}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-              )}
+                )}
               </article>
             </section>
           </Card>
@@ -246,7 +268,9 @@ export default function TaskDetailsPage() {
 function QuickKpi({ label, value }: { label: string; value: string }) {
   return (
     <article className="rounded-xl border border-slate-200 bg-white px-3 py-2">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        {label}
+      </p>
       <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
     </article>
   );
@@ -255,7 +279,9 @@ function QuickKpi({ label, value }: { label: string; value: string }) {
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-emerald-200">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </p>
       <p className="mt-1.5 text-sm font-semibold text-slate-900">{value}</p>
     </article>
   );
