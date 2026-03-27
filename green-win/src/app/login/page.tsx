@@ -1,6 +1,9 @@
 "use client";
 
+import Button from "@/components/button/Button";
 import TextField from "@/components/text-field/TextField";
+import { ButtonVariant } from "@/lib/button/types";
+import Link from "next/link";
 import { useState } from "react";
 
 const LoginPage = () => {
@@ -71,6 +74,27 @@ const LoginPage = () => {
             onBlurValidate={isValidPassword}
             leftIcon="/password-icon.svg"
           />
+        </div>
+        <div className="flex flex-col gap-4 w-full items-center justify-center">
+          <Button
+            text="Login"
+            variant={ButtonVariant.Primary}
+            onClick={() => {}}
+            disabled={!validEmail || !validPassword}
+            isLoading={false}
+            className="shadow-custom"
+          />
+          <div className="flex gap-2">
+            <p className="paragraph1-light font-secondary text-base-900">
+              Don't have an account?
+            </p>
+            <Link
+              className="paragraph1-underlined font-secondary text-primary-800 hover:text-primary-900 cursor-pointer transition-colors duration-300 ease-out"
+              href="/signup"
+            >
+              Sign up
+            </Link>
+          </div>
         </div>
       </div>
     </div>
