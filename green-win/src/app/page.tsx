@@ -238,9 +238,16 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="border-t border-slate-200 px-6 py-6 text-xs text-slate-500 sm:px-10">
-          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2">
-            <p>GreenWin • Carbon-aware cloud orchestration</p>
+        <footer className="border-t bg-primary-900 pt-30 pb-16 flex flex-col gap-23 text-xs text-base-100 px-24">
+          <div className="text-base-100 flex flex-col gap-6">
+            <p className="heading7 ">Green Win</p>
+            <p className="paragraph1-light max-w-55">
+              Optimizing the world's compute resources for a sustainable, net-
+              zero future.
+            </p>
+          </div>
+          <div className="caption1 text-primary-600  flex w-full flex-wrap items-center justify-between ">
+            <p>© 2026 Green Win Inc. All rights reserved.</p>
             <p>Hackathon MVP</p>
           </div>
         </footer>
