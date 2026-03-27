@@ -1,103 +1,22 @@
 "use client";
-import Link from "next/link";
 
-import { useState, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
+import Link from "next/link";
+import HowItWorksCard from "@/components/landing-page/HowItWorrksCard";
 import EuropeMap from "@/assets/EuropeMap.png";
 import GreenEnergy from "@/assets/GreenEnergy.png";
 import RedEnergy from "@/assets/RedEnergy.png";
 import TickAndText from "@/components/landing-page/TickAndText";
-import { useRouter } from "next/dist/client/components/navigation";
-
-export function NavLink({ href, children }: any) {
-  const pathname = usePathname();
-
-  const isActive = pathname === href;
-
-  return (
-    <Link
-      href={href}
-      className={`nav-bar-button transition
-        ${isActive ? "bg-primary-900 text-base-100" : ""}`}
-    >
-      {children}
-    </Link>
-  );
-}
-
-export function ProfileDropdown() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  const [hover, setHover] = useState(false);
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        className={`nav-bar-button flex items-center gap-2 transition-colors
-    ${open ? "bg-primary-900 text-base-100" : "hover:bg-primary-900 hover:text-base-100"}`}
-      >
-        <img
-          src={open || hover ? "/PersonBase100.svg" : "/Person.svg"}
-          alt="Profile"
-          className="h-6 w-6 transition"
-        />
-      </button>
-
-      {open && (
-        <div className="absolute right-0 mt-2 w-44 rounded-lg border border-base-200 bg-base-100 shadow-lg">
-          <button className="w-full px-4 py-2 text-left text-sm hover:bg-base-200">
-            Profile
-          </button>
-          <button className="w-full px-4 py-2 text-left text-sm hover:bg-base-200">
-            Logout
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function Home() {
-  const router = useRouter();
   return (
     <div className="relative min-h-screen text-base-900">
-      <div className="absolute top-5 left-0 right-0 -z-10">
+      <div className="absolute top-0 left-0 right-0 -z-10">
         <img
           src="/BGimage.svg"
           alt="background"
           className="w-full h-auto object-top "
         />
       </div>
-
-      <header className="sticky top-0 z-20 border-b border-base-200 bg-base-100">
-        <nav className="flex w-full items-center justify-between px-24 py-3 ">
-          <Link href="/" className="flex flex-row gap-2">
-            <img src="/greenwin-logo.svg" alt="Logo" />
-            <p className="heading8 text-secondary-900">Green Win</p>
-          </Link>
-          <div className="hidden items-center gap-10 md:flex">
-            <NavLink href="/tasks">Jobs</NavLink>
-            <NavLink href="/stats">Stats</NavLink>
-            <ProfileDropdown />
-          </div>
-        </nav>
-      </header>
 
       <main>
         <section className="mx-auto min-h-[85vh] flex flex-col justify-center  w-full max-w-6xl px-6 py-16 text-center">
@@ -134,7 +53,7 @@ export default function Home() {
 
         <section
           id="efficiency"
-          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-36 shadow-custom"
+          className="flex flex-col gap-20 rounded-xl bg-base-100 mx-24 w-auto px-26 py-25 shadow-custom"
         >
           <div className="text-center gap-6 flex flex-col items-center justify-center">
             <p className="heading3 text-base-800">Efficiency By Design</p>

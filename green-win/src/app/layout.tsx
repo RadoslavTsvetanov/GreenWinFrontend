@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Advent_Pro, Source_Sans_3 } from "next/font/google";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { GlobalNavbar } from "@/components/navigation/GlobalNavbar";
+import NavBar from "@/components/nav-bar/NavBar";
 import "./globals.css";
 
 const primaryFont = Advent_Pro({
@@ -35,6 +35,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full flex flex-col bg-slate-50 text-slate-900"
       >
+        <NavBar />
         <AuthProvider>
           <ToastProvider>
             <main className="flex-1">{children}</main>
