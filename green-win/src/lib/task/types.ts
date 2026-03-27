@@ -27,7 +27,6 @@ export type CreateTaskPayload = {
   dockerImage?: string;
   ownerId: string;
   projectId: string;
-  latestFinishAt?: string;
   strategies?: Array<{
     periodicity: StrategyPeriodicity;
     times?: string[];

@@ -3,18 +3,34 @@ import { authorizedApiFetch, ensureOk } from "@/lib/api/http";
 export type BackendTaskItem = {
   id?: string;
   name?: string;
-  status?: string;
+  status?: "draft" | "queued" | "running" | "succeeded" | "failed" | "postponed";
   codeType?: string;
   project?: {
     id?: string;
     name?: string;
   } | null;
-  latestFinishAt?: string | null;
-  allowedCloudProviders?: string[] | null;
-  allowedRegions?: string[] | null;
-  estimatedCo2SavedGrams?: number | null;
-  co2SavedGrams?: number | null;
+  strategies?: Array<{
+    id?: string;
+    periodicity?: string;
+    isActive?: boolean;
+    activatedAt?: string | null;
+    lastFiredAt?: string | null;
+  }> | null;
+  executions?: Array<{
+    id?: string;
+    status?: string;
+    provider?: string | null;
+    region?: string | null;
+    metrics?: {
+      estimatedEmissionsGco2?: number;
+      estimatedEnergyKwh?: number;
+    } | null;
+    createdAt?: string;
+    startedAt?: string | null;
+    finishedAt?: string | null;
+  }> | null;
   createdAt?: string;
+  updatedAt?: string;
   description?: string | null;
 };
 

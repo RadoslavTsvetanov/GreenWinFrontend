@@ -7,25 +7,37 @@ export function canSubmitTaskForm(form: TaskFormState): boolean {
       ? form.lambdaFiles.length > 0
       : Boolean(form.dockerImage.trim());
 
-  const hasRequiredDeadline =
-    form.executionMode === "deadline" ? Boolean(form.deadline) : true;
+  const schedulingEnabled =
+    form.executionMode === "deadline" ? form.attachStrategy : true;
+
+  const validWeeklyDay =
+    Number.isInteger(form.strategyDayOfWeek) &&
+    form.strategyDayOfWeek >= 0 &&
+    form.strategyDayOfWeek <= 6;
+
+  const validMonthlyDay =
+    Number.isInteger(form.strategyDayOfMonth) &&
+    form.strategyDayOfMonth >= 1 &&
+    form.strategyDayOfMonth <= 31;
 
   const strategyValid = !form.attachStrategy
     ? true
     : form.strategyPeriodicity === "once"
-      ? true
+      ? Boolean(form.strategyExecutionTime)
       : form.strategyPeriodicity === "daily"
         ? form.strategyTimesCsv
             .split(",")
             .map((item) => item.trim())
             .filter(Boolean).length > 0
-        : Boolean(form.strategyExecutionTime);
+        : form.strategyPeriodicity === "weekly"
+          ? Boolean(form.strategyExecutionTime) && validWeeklyDay
+          : Boolean(form.strategyExecutionTime) && validMonthlyDay;
 
   return (
     Boolean(form.taskName.trim()) &&
     Boolean(form.projectId) &&
     hasRuntime &&
-    hasRequiredDeadline &&
+    schedulingEnabled &&
     strategyValid
   );
 }
@@ -48,16 +60,7 @@ export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
     payload.dockerImage = form.dockerImage.trim();
   }
 
-  if (form.executionMode === "deadline" && form.deadline) {
-    payload.latestFinishAt = new Date(form.deadline).toISOString();
-  }
-
   if (form.attachStrategy) {
-    const now = new Date();
-    const currentUtcTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(
-      now.getUTCMinutes(),
-    ).padStart(2, "0")}`;
-
     const strategy = {
       periodicity: form.strategyPeriodicity,
       times:
@@ -69,7 +72,7 @@ export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
           : undefined,
       executionTime:
         form.strategyPeriodicity === "once"
-          ? currentUtcTime
+          ? form.strategyExecutionTime || undefined
           : form.strategyPeriodicity === "daily"
           ? undefined
           : form.strategyExecutionTime || undefined,

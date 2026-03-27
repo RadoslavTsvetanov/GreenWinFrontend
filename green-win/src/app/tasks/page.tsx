@@ -63,27 +63,38 @@ function TasksPageContent() {
         const mapped: ManagedTask[] = data.map((task) => {
           const status = mapTaskStatusToManaged(task.status);
           const runtimeType = mapTaskCodeTypeToRuntimeType(task.codeType);
+          const latestExecution = Array.isArray(task.executions)
+            ? [...task.executions]
+                .sort(
+                  (a, b) =>
+                    new Date(String(b.createdAt ?? 0)).getTime() -
+                    new Date(String(a.createdAt ?? 0)).getTime(),
+                )
+                .at(0) ?? null
+            : null;
+          const activeStrategy = Array.isArray(task.strategies)
+            ? task.strategies.find((strategy) => strategy?.isActive)
+            : null;
+          const fallbackStrategy = Array.isArray(task.strategies)
+            ? task.strategies[0]
+            : null;
+          const periodicity = activeStrategy?.periodicity ?? fallbackStrategy?.periodicity;
           const executionMode = mapTaskRunModeToExecutionMode(
-            task.latestFinishAt ? "scheduled" : "immediate",
+            periodicity && periodicity !== "once" ? "scheduled" : "immediate",
           );
 
-          const providerRaw =
-            Array.isArray(task.allowedCloudProviders) && task.allowedCloudProviders.length > 0
-              ? String(task.allowedCloudProviders[0])
+          const provider =
+            latestExecution?.provider && latestExecution.provider.trim().length > 0
+              ? latestExecution.provider
               : null;
-          const provider = providerRaw && providerRaw.trim().length > 0 ? providerRaw : null;
-
           const region =
-            Array.isArray(task.allowedRegions) && task.allowedRegions.length > 0
-              ? String(task.allowedRegions[0])
+            latestExecution?.region && latestExecution.region.trim().length > 0
+              ? latestExecution.region
               : null;
-
           const estimatedCo2SavedGrams =
-            typeof task.estimatedCo2SavedGrams === "number"
-              ? task.estimatedCo2SavedGrams
-              : typeof task.co2SavedGrams === "number"
-                ? task.co2SavedGrams
-                : null;
+            typeof latestExecution?.metrics?.estimatedEmissionsGco2 === "number"
+              ? latestExecution.metrics.estimatedEmissionsGco2
+              : null;
 
           return {
             id: String(task.id ?? ""),
@@ -97,7 +108,7 @@ function TasksPageContent() {
             provider,
             region,
             createdAt: String(task.createdAt ?? new Date().toISOString()),
-            deadline: task.latestFinishAt ? String(task.latestFinishAt) : null,
+            deadline: null,
             estimatedCo2SavedGrams,
             notes: String(task.description ?? ""),
           };

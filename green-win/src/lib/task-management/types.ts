@@ -1,6 +1,12 @@
 export type TaskExecutionMode = "immediate" | "deadline";
 export type TaskRuntimeType = "lambda_code" | "docker_image";
-export type TaskStatus = "queued" | "scheduled" | "running" | "completed" | "failed";
+export type TaskStatus =
+  | "draft"
+  | "queued"
+  | "running"
+  | "succeeded"
+  | "failed"
+  | "postponed";
 
 export type ManagedTask = {
   id: string;

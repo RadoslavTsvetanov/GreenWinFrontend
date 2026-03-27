@@ -2,6 +2,10 @@ import Link from "next/link";
 import { ManagedTask } from "@/lib/task-management/types";
 import { TaskStatusBadge } from "./TaskStatusBadge";
 
+function formatFixed4(value: number): string {
+  return Number.isFinite(value) ? value.toFixed(4) : "0.0000";
+}
+
 function formatRuntime(value: ManagedTask["runtimeType"]) {
   return value === "lambda_code" ? "Lambda code" : "Docker image";
 }
@@ -55,7 +59,7 @@ export function TaskTable({ tasks }: { tasks: ManagedTask[] }) {
                 value={
                   task.estimatedCo2SavedGrams === null
                     ? "N/A"
-                    : `${task.estimatedCo2SavedGrams} g CO2`
+                    : `${formatFixed4(task.estimatedCo2SavedGrams)} g CO2`
                 }
               />
             </div>

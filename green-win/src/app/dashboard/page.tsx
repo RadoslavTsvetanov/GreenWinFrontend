@@ -10,7 +10,6 @@ import {
   PageHeader,
   PageShell,
 } from "@/components/ui/primitives";
-import { fetchProjectsDetailed } from "@/lib/projects/api";
 import {
   fetchOrganizationRealFootprint,
   fetchOrganizationRegionalFootprint,
@@ -19,7 +18,11 @@ import {
 } from "@/lib/organizations/dashboard";
 
 function formatKg(value: number) {
-  return `${value.toLocaleString()} kg CO2`;
+  return `${formatFixed4(value)} kg CO2`;
+}
+
+function formatFixed4(value: number): string {
+  return Number.isFinite(value) ? value.toFixed(4) : "0.0000";
 }
 
 export default function DashboardPage() {
@@ -30,38 +33,7 @@ export default function DashboardPage() {
   const [realFootprint, setRealFootprint] = useState<number | null>(null);
   const [regionalFootprint, setRegionalFootprint] = useState<number | null>(null);
   const [selectedRegion, setSelectedRegion] = useState("eu-west-1");
-  const [organizationId, setOrganizationId] = useState<string | null>(
-    user?.organizationId ?? null,
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function resolveOrganization() {
-      if (user?.organizationId) {
-        setOrganizationId(user.organizationId);
-        return;
-      }
-
-      try {
-        const projects = await fetchProjectsDetailed();
-        if (cancelled) return;
-        const firstOrgId =
-          projects.find((project) => project.organizationId)?.organizationId ??
-          null;
-        setOrganizationId(firstOrgId);
-      } catch {
-        if (!cancelled) {
-          setOrganizationId(null);
-        }
-      }
-    }
-
-    resolveOrganization();
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.organizationId]);
+  const organizationId = user?.organizationId ?? null;
 
   useEffect(() => {
     if (!organizationId) {
@@ -154,8 +126,8 @@ export default function DashboardPage() {
           <LoadingState label="Loading organization dashboard..." />
         ) : !dashboard ? (
           <EmptyState
-            title="No organization dashboard available"
-            description="Create or join an organization and at least one project to populate metrics."
+            title="No organization linked to your account"
+            description="Recent executions and metrics are shown only for your own organization."
           />
         ) : (
           <>
@@ -172,11 +144,13 @@ export default function DashboardPage() {
             <section className="grid gap-3 md:grid-cols-3">
               <MetricCard
                 label="Real carbon footprint (gCO2)"
-                value={realFootprint === null ? "N/A" : realFootprint.toFixed(2)}
+                value={realFootprint === null ? "N/A" : formatFixed4(realFootprint)}
               />
               <MetricCard
                 label={`Regional footprint (${selectedRegion})`}
-                value={regionalFootprint === null ? "N/A" : regionalFootprint.toFixed(2)}
+                value={
+                  regionalFootprint === null ? "N/A" : formatFixed4(regionalFootprint)
+                }
               />
               <Card className="min-h-[106px]">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -261,7 +235,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <MetricCard
                     label="Energy saved"
-                    value={`${dashboard.carbon.totalEnergySaved.toLocaleString()} kWh`}
+                    value={`${formatFixed4(dashboard.carbon.totalEnergySaved)} kWh`}
                     compact
                   />
                   <MetricCard
@@ -293,7 +267,7 @@ export default function DashboardPage() {
                         <div className="flex items-center justify-between gap-2">
                           <p className="font-semibold text-slate-900">{project.name}</p>
                           <p className="text-xs text-emerald-700">
-                            {project.totalEnergySaved.toFixed(2)} kWh saved
+                            {formatFixed4(project.totalEnergySaved)} kWh saved
                           </p>
                         </div>
                         <p className="mt-1 text-xs text-slate-600">

@@ -8,6 +8,8 @@ type ExecutionSectionProps = {
 };
 
 export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
+  const isScheduled = form.executionMode === "deadline";
+
   return (
     <>
       <div>
@@ -27,7 +29,10 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
           </Button>
           <Button
             type="button"
-            onClick={() => onChange("executionMode", "deadline")}
+            onClick={() => {
+              onChange("executionMode", "deadline");
+              if (!form.attachStrategy) onChange("attachStrategy", true);
+            }}
             variant="secondary"
             className={`transition ${
               form.executionMode === "deadline"
@@ -38,22 +43,10 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
             Run by deadline
           </Button>
         </div>
+        <p className="mt-2 text-xs text-slate-600">
+          Backend scheduling is strategy-based: delayed runs require strategy timing + activation.
+        </p>
       </div>
-
-      {form.executionMode === "deadline" && (
-        <div>
-          <label htmlFor="deadline" className="block text-sm font-medium text-slate-800">
-            Latest execution time *
-          </label>
-          <Input
-            id="deadline"
-            type="datetime-local"
-            value={form.deadline ?? ""}
-            onChange={(value) => onChange("deadline", value)}
-            className="mt-2 bg-slate-50 focus:border-cyan-500 focus:ring-cyan-100"
-          />
-        </div>
-      )}
 
       <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-medium text-slate-800">Strategy at creation</p>
@@ -62,9 +55,15 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
             type="checkbox"
             checked={form.attachStrategy}
             onChange={(event) => onChange("attachStrategy", event.target.checked)}
+            disabled={isScheduled}
           />
           Add strategy during task creation
         </label>
+        {isScheduled && (
+          <p className="mt-1 text-xs text-cyan-700">
+            Enabled automatically for scheduled execution mode.
+          </p>
+        )}
 
         {form.attachStrategy && (
           <div className="mt-3 space-y-3">
@@ -108,9 +107,26 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
                 />
               </div>
             ) : form.strategyPeriodicity === "once" ? (
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
-                For one-time strategies, execution happens when you activate it. Time is auto-set
-                by the system in UTC.
+              <div className="space-y-2">
+                <div>
+                  <label
+                    htmlFor="strategyExecutionTime"
+                    className="block text-sm font-medium text-slate-800"
+                  >
+                    Planned execution time (UTC, HH:mm)
+                  </label>
+                  <Input
+                    id="strategyExecutionTime"
+                    type="time"
+                    value={form.strategyExecutionTime}
+                    onChange={(value) => onChange("strategyExecutionTime", value)}
+                    className="mt-2 bg-white"
+                  />
+                </div>
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                  ONCE strategy executes immediately when activated. For automatic delayed runs,
+                  prefer DAILY/WEEKLY/MONTHLY and activate on create.
+                </div>
               </div>
             ) : (
               <div>

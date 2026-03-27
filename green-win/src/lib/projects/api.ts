@@ -30,6 +30,25 @@ export type UpdateProjectPayload = Partial<{
   isActive: boolean;
 }>;
 
+function dedupeById<T extends { id: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (!item.id || seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+}
+
+function dedupeByName<T extends { name: string }>(items: T[]): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = item.name.trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export async function fetchProjects(
   organizationId?: string | null,
 ): Promise<ProjectOption[]> {
@@ -41,12 +60,14 @@ export async function fetchProjects(
   await ensureOk(response);
 
   const data = (await response.json()) as Array<{ id?: string; name?: string }>;
-  return data
+  const mapped = data
     .filter((project) => project.id && project.name)
     .map((project) => ({
       id: String(project.id),
       name: String(project.name),
     }));
+  const byId = dedupeById(mapped);
+  return organizationId ? byId : dedupeByName(byId);
 }
 
 type RawProject = {
@@ -73,7 +94,7 @@ export async function fetchProjectsDetailedByOrganization(
   await ensureOk(response);
   const data = (await response.json()) as RawProject[];
 
-  return data.map((project) => ({
+  const mapped = data.map((project) => ({
     id: String(project.id ?? ""),
     name: String(project.name ?? ""),
     description:
@@ -85,6 +106,8 @@ export async function fetchProjectsDetailedByOrganization(
     tasksCount: Array.isArray(project.tasks) ? project.tasks.length : 0,
     isActive: project.isActive !== false,
   }));
+  const byId = dedupeById(mapped);
+  return organizationId ? byId : dedupeByName(byId);
 }
 
 export async function createProject(

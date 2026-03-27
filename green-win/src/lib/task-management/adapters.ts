@@ -4,6 +4,8 @@ export function mapTaskStatusToManaged(
   status: string | null | undefined,
 ): ManagedTask["status"] {
   switch (status) {
+    case "draft":
+      return "draft";
     case "queued":
       return "queued";
     case "running":
@@ -11,12 +13,11 @@ export function mapTaskStatusToManaged(
     case "failed":
       return "failed";
     case "succeeded":
-      return "completed";
+      return "succeeded";
     case "postponed":
-      return "scheduled";
-    case "draft":
+      return "postponed";
     default:
-      return "queued";
+      return "draft";
   }
 }
 

@@ -29,10 +29,11 @@ export function TaskFilters({
           className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-400 focus:bg-white focus:ring-2 focus:ring-emerald-100"
         >
           <option value="all">All statuses</option>
+          <option value="draft">Draft</option>
           <option value="queued">Queued</option>
-          <option value="scheduled">Scheduled</option>
+          <option value="postponed">Postponed</option>
           <option value="running">Running</option>
-          <option value="completed">Completed</option>
+          <option value="succeeded">Succeeded</option>
           <option value="failed">Failed</option>
         </select>
       </div>

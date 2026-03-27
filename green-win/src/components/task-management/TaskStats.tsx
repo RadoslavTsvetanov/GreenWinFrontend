@@ -1,16 +1,20 @@
 import { ManagedTask } from "@/lib/task-management/types";
 
+function formatFixed4(value: number): string {
+  return Number.isFinite(value) ? value.toFixed(4) : "0.0000";
+}
+
 export function TaskStats({ tasks }: { tasks: ManagedTask[] }) {
   const total = tasks.length;
   const running = tasks.filter((task) => task.status === "running").length;
-  const scheduled = tasks.filter((task) => task.status === "scheduled").length;
+  const draft = tasks.filter((task) => task.status === "draft").length;
   const co2Saved = tasks.reduce((acc, task) => acc + (task.estimatedCo2SavedGrams ?? 0), 0);
 
   const items = [
     { label: "Total tasks", value: total },
     { label: "Running now", value: running },
-    { label: "Scheduled", value: scheduled },
-    { label: "CO2 saved (g)", value: co2Saved },
+    { label: "Draft", value: draft },
+    { label: "CO2 saved (g)", value: formatFixed4(co2Saved) },
   ];
 
   return (
