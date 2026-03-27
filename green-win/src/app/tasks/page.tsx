@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { TaskFilters } from "@/components/task-management/TaskFilters";
 import { TaskStats } from "@/components/task-management/TaskStats";
@@ -34,7 +34,7 @@ import {
   mapTaskStatusToManaged,
 } from "@/lib/task-management/adapters";
 
-export default function TasksPage() {
+function TasksPageContent() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | TaskStatus>("all");
@@ -341,5 +341,19 @@ export default function TasksPage() {
         )}
       </main>
     </PageShell>
+  );
+}
+
+export default function TasksPage() {
+  return (
+    <Suspense
+      fallback={
+        <PageShell>
+          <LoadingState label="Loading tasks…" />
+        </PageShell>
+      }
+    >
+      <TasksPageContent />
+    </Suspense>
   );
 }
