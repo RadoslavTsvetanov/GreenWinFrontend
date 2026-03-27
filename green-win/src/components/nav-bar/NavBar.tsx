@@ -10,7 +10,7 @@ export default function NavBar({ href, children }: any) {
 
   const isActive = pathname.startsWith(href);
   return (
-    <nav className="sticky top-0 z-20 border-b border-base-200 bg-base-100">
+    <nav className=" sticky top-0 z-20 border-b border-base-200 bg-base-100">
       <div className="flex w-full items-center justify-between px-24 py-3 ">
         <Link href={"/"} className="flex flex-row gap-2">
           <img src="/greenwin-logo.svg" alt="Logo" />

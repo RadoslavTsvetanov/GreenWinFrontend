@@ -33,7 +33,7 @@ export default function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className="min-h-full flex flex-col bg-slate-50 text-slate-900"
+        className="min-h-full flex flex-col bg-base-100 text-base-900"
       >
         <NavBar />
         <AuthProvider>

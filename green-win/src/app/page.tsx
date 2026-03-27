@@ -10,7 +10,7 @@ import TickAndText from "@/components/landing-page/TickAndText";
 export default function Home() {
   return (
     <div className="relative min-h-screen text-base-900">
-      <div className="absolute bottom-0 top-0 left-0 right-0 -z-10">
+      <div className="absolute bottom-0 -top-23 left-0 right-0 -z-10">
         <img
           src="/BGimage.svg"
           alt="background"
