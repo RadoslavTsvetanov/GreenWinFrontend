@@ -6,10 +6,12 @@ import EuropeMap from "@/assets/EuropeMap.png";
 import GreenEnergy from "@/assets/GreenEnergy.png";
 import RedEnergy from "@/assets/RedEnergy.png";
 import TickAndText from "@/components/landing-page/TickAndText";
+import NavBar from "@/components/nav-bar/NavBar";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen text-base-900">
+      <NavBar />
       <div className="absolute bottom-0 -top-23 left-0 right-0 -z-10">
         <img
           src="/BGimage.svg"

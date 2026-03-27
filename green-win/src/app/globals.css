@@ -145,7 +145,13 @@ input::-webkit-inner-spin-button {
   }
 
   .nav-bar-button {
-    @apply rounded-lg px-5 py-3 font-primary text-heading8 font-medium text-secondary-900
+    @apply rounded-lg px-5 py-3 font-primary text-heading8 font-medium text-primary-900
+    hover:bg-primary-900 hover:text-base-100
+    transition-colors duration-300 ease-out;
+  }
+
+  .nav-bar-button-light {
+    @apply rounded-lg px-5 py-3 font-primary text-heading8 font-medium text-base-100 bg-primary-700
     hover:bg-primary-900 hover:text-base-100
     transition-colors duration-300 ease-out;
   }
