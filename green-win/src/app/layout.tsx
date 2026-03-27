@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Advent_Pro, Source_Sans_3 } from "next/font/google";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { ToastProvider } from "@/components/ui/Toast";
+import { GlobalNavbar } from "@/components/navigation/GlobalNavbar";
 import "./globals.css";
 
 const primaryFont = Advent_Pro({
@@ -25,9 +28,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${primaryFont.variable} ${secondaryFont.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+        <AuthProvider>
+          <ToastProvider>
+            <GlobalNavbar />
+            <main className="flex-1">{children}</main>
+          </ToastProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }
