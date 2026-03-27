@@ -8,6 +8,7 @@ import EuropeMap from "@/assets/EuropeMap.png";
 import GreenEnergy from "@/assets/GreenEnergy.png";
 import RedEnergy from "@/assets/RedEnergy.png";
 import TickAndText from "@/components/landing-page/TickAndText";
+import { useRouter } from "next/dist/client/components/navigation";
 
 export function NavLink({ href, children }: any) {
   const pathname = usePathname();
@@ -73,22 +74,23 @@ export function ProfileDropdown() {
 }
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="relative min-h-screen text-base-900">
       <div className="absolute top-5 left-0 right-0 -z-10">
-        {" "}
         <img
           src="/BGimage.svg"
           alt="background"
           className="w-full h-auto object-top "
-        />{" "}
+        />
       </div>
 
       <header className="sticky top-0 z-20 border-b border-base-200 bg-base-100">
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-3 sm:px-10">
-          <div>
+        <nav className="flex w-full items-center justify-between px-24 py-3 ">
+          <Link href="/" className="flex flex-row gap-2">
+            <img src="/greenwin-logo.svg" alt="Logo" />
             <p className="heading8 text-secondary-900">Green Win</p>
-          </div>
+          </Link>
           <div className="hidden items-center gap-10 md:flex">
             <NavLink href="/tasks">Jobs</NavLink>
             <NavLink href="/stats">Stats</NavLink>
@@ -111,19 +113,20 @@ export default function Home() {
                 process.
               </p>
             </div>
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-6">
               <Link
                 href="/tasks/new"
-                className="rounded-lg bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+                className=" w-92 rounded-sm bg-base-100 border-secondary-900 border px-6 py-4 text-sm body1 text-secondary-900
+                 hover:bg-secondary-700 hover:border-secondary-700 hover:text-base-100 ease-out transition duration-300"
               >
-                Start with task
+                View Stats
               </Link>
 
               <Link
                 href="/tasks"
-                className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                className=" w-92 rounded-sm bg-secondary-800 px-6 py-4 text-sm body1 text-base-100 hover:bg-secondary-900 ease-out transition duration-300"
               >
-                View tasks
+                Add job
               </Link>
             </div>
           </div>
