@@ -35,7 +35,6 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full flex flex-col bg-base-100 text-base-900"
       >
-        <NavBar />
         <AuthProvider>
           <ToastProvider>
             <main className="flex-1">{children}</main>

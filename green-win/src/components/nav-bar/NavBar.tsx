@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NavLink } from "@/components/nav-bar/NavLink";
+import { Colors, NavLink } from "@/components/nav-bar/NavLink";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { useAuth } from "@/components/auth/AuthProvider";
 
-export default function NavBar({ href, children }: any) {
+export default function NavBar({ href }: any) {
   const pathname = usePathname();
-
+  const { isAuthenticated } = useAuth();
   const isActive = pathname.startsWith(href);
+
   return (
     <nav className=" sticky top-0 z-20 border-b border-base-200 bg-base-100">
       <div className="flex w-full items-center justify-between px-24 py-3 ">
@@ -17,18 +19,19 @@ export default function NavBar({ href, children }: any) {
           <p className="heading8 text-secondary-900">Green Win</p>
         </Link>
         <div className="hidden items-center gap-10 md:flex">
-          <NavLink
-            href="/tasks"
-            className={`nav-bar-button transition ${
-              isActive
-                ? "bg-primary-900 text-base-100"
-                : "hover:bg-primary-900 hover:text-base-100"
-            }`}
-          >
+          <NavLink href="/tasks" color={Colors.dark}>
             Jobs
           </NavLink>
-          <NavLink href="/stats">Stats</NavLink>
-          <ProfileDropdown />
+          <NavLink href="/stats" color={Colors.dark}>
+            Stats
+          </NavLink>
+          {isAuthenticated ? (
+            <ProfileDropdown />
+          ) : (
+            <NavLink href="/login" color={Colors.light}>
+              Sign In
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>
