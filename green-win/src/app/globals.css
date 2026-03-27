@@ -1,14 +1,9 @@
 @import "tailwindcss";
 
-html,
-body {
-  min-height: 100%;
-  background: #f8fafc;
-  color: #0f172a;
-}
-
-* {
-  box-sizing: border-box;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 @theme {
@@ -139,6 +134,14 @@ body {
   }
   .caption1-underlined {
     @apply font-secondary text-caption1 font-normal underline;
+  }
+
+  .base-input {
+    @apply flex w-full items-center rounded-sm p-3 gap-3;
+  }
+
+  .base-button {
+    @apply w-95 rounded-sm px-3 py-4 flex gap-3 items-center justify-center text-body1 font-normal font-secondary transition-colors duration-300 ease-out;
   }
 
   .nav-bar-button {

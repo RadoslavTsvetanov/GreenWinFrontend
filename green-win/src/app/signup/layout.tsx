@@ -7,7 +7,7 @@ const LoginLayout = ({ children }: { children: React.ReactNode }) => {
       style={{ backgroundImage: `url(${background.src})` }}
     >
       <div className="min-h-screen min-w-screen bg-center bg-cover flex items-center justify-center bg-base-100/50">
-        {children}
+        <div className="py-5">{children}</div>
       </div>
     </div>
   );
