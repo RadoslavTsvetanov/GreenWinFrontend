@@ -152,19 +152,20 @@ export default function Home() {
               Built for clean operations
             </h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <FeatureCard
-              title="Real-time carbon mapping"
-              description="Continuously evaluates regions and providers based on cleaner energy mix."
-            />
-            <FeatureCard
-              title="Automatic scheduling"
-              description="Decides immediate run or delayed execution windows against your deadlines."
-            />
-            <FeatureCard
-              title="Cost and impact reporting"
-              description="Keeps status, region and estimated CO2 savings in one management workspace."
-            />
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {processCards.map((item, index) => (
+              <Card
+                key={item.title}
+                className="h-full rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-[#f8faf8] p-8 shadow-[0_10px_35px_-30px_rgba(15,23,42,0.5)]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  {index + 1}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
+              </Card>
+            ))}
           </div>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             <Panel className="bg-gradient-to-br from-[#0b2746] to-[#0e3558] text-white lg:col-span-2">
@@ -231,9 +232,42 @@ export default function Home() {
                 />
                 <CardRow label="Estimated reduction" value="22% less CO2" />
               </div>
-              <button className="mt-6 w-full rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">
-                Run with GreenWin
-              </button>
+            </Card>
+          </div>
+        </section>
+
+        <section className="w-full bg-emerald-700 py-16 text-white sm:py-20">
+          <div className="mx-auto w-full max-w-[94vw] text-center sm:max-w-[90vw] xl:max-w-[1600px]">
+            <p className="mx-auto max-w-3xl text-base leading-relaxed text-emerald-50 sm:text-xl">
+              "Switching our batch processing to GreenWin didn't just help with our net-zero targets
+              early, it actually lowered our infrastructure bill by 22%."
+            </p>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
+              Works for teams that ship
+            </p>
+          </div>
+        </section>
+
+        <section className="w-full bg-[#f7faf7] py-20 sm:py-24">
+          <div className="mx-auto w-full max-w-[94vw] text-center sm:max-w-[90vw] xl:max-w-[1600px]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Start now</p>
+            <h2 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+              Ready for the Green Revolution?
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+              Create your first project workflow and manage tasks from one unified dashboard.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3.5">
+              <LinkButton
+                href="/projects"
+                variant="primary"
+                className="rounded-full bg-emerald-700 px-6 py-2.5 hover:bg-emerald-800"
+              >
+                Get started now
+              </LinkButton>
+              <LinkButton href="/tasks/new" variant="secondary" className="rounded-full px-6 py-2.5">
+                Book a demo
+              </LinkButton>
             </div>
           </div>
         </section>
@@ -289,11 +323,11 @@ export default function Home() {
           </div>
         </footer>
       </main>
-    </div>
+    </PageShell>
   );
 }
 
-function Stat({ title, value }: { title: string; value: string }) {
+function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <article className="rounded-xl bg-white/85 p-3 shadow-sm">
       <p className="text-[11px] uppercase tracking-wide text-slate-500">

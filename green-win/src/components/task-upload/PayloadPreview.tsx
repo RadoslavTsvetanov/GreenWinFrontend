@@ -6,7 +6,7 @@ type PayloadPreviewProps = {
 
 export function PayloadPreview({ payloadPreview }: PayloadPreviewProps) {
   return (
-    <section className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-xl shadow-slate-200 backdrop-blur">
+    <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <h2 className="text-lg font-semibold text-slate-900">Payload preview</h2>
       <p className="mt-2 text-sm text-slate-600">
         JSON sent to backend for `POST /api/tasks`.

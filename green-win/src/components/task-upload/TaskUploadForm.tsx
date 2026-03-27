@@ -4,9 +4,10 @@ import { FormEvent } from "react";
 import { TaskFormState } from "@/lib/task/types";
 import { ExecutionSection } from "./ExecutionSection";
 import { FormFeedback } from "./FormFeedback";
-import { PreferencesSection } from "./PreferencesSection";
 import { RuntimeSection } from "./RuntimeSection";
-import { TaskFormChangeHandler, TaskFormToggleArrayHandler } from "./types";
+import { TaskFormChangeHandler } from "./types";
+import { ProjectOption } from "@/lib/projects/api";
+import { Card, Input, Select } from "@/components/ui/primitives";
 
 type TaskUploadFormProps = {
   form: TaskFormState;
@@ -14,9 +15,10 @@ type TaskUploadFormProps = {
   canSubmit: boolean;
   errorMessage: string;
   successMessage: string;
+  projects: ProjectOption[];
+  isLoadingProjects: boolean;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChange: TaskFormChangeHandler;
-  onToggleArrayValue: TaskFormToggleArrayHandler;
 };
 
 export function TaskUploadForm({
@@ -25,34 +27,52 @@ export function TaskUploadForm({
   canSubmit,
   errorMessage,
   successMessage,
+  projects,
+  isLoadingProjects,
   onSubmit,
   onChange,
-  onToggleArrayValue,
 }: TaskUploadFormProps) {
   return (
-    <section className="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-xl shadow-slate-200 backdrop-blur lg:col-span-2">
+    <Card className="lg:col-span-2">
       <form className="space-y-6" onSubmit={onSubmit}>
         <div>
           <label htmlFor="taskName" className="block text-sm font-medium text-slate-800">
             Task name *
           </label>
-          <input
+          <Input
             id="taskName"
             type="text"
             value={form.taskName ?? ""}
-            onChange={(event) => onChange("taskName", event.target.value)}
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+            onChange={(value) => onChange("taskName", value)}
+            className="mt-2 bg-slate-50"
             placeholder="train-vision-model-nightly"
           />
         </div>
 
+        <div>
+          <label htmlFor="projectId" className="block text-sm font-medium text-slate-800">
+            Project *
+          </label>
+          <Select
+            id="projectId"
+            value={form.projectId}
+            onChange={(value) => onChange("projectId", value)}
+            disabled={isLoadingProjects}
+            className="mt-2 bg-slate-50"
+          >
+            <option value="">
+              {isLoadingProjects ? "Loading projects..." : "Select a project"}
+            </option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+
         <RuntimeSection form={form} onChange={onChange} />
         <ExecutionSection form={form} onChange={onChange} />
-        <PreferencesSection
-          form={form}
-          onChange={onChange}
-          onToggleArrayValue={onToggleArrayValue}
-        />
         <FormFeedback
           isSubmitting={isSubmitting}
           canSubmit={canSubmit}
@@ -60,6 +80,6 @@ export function TaskUploadForm({
           successMessage={successMessage}
         />
       </form>
-    </section>
+    </Card>
   );
 }
