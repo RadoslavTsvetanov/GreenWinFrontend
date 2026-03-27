@@ -4,22 +4,9 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
-
-const steps = [
-  {
-    title: "Submit task",
-    description: "Upload Lambda files or Docker image from your backend team.",
-  },
-  {
-    title: "Set constraints",
-    description: "Choose providers, regions, and immediate or deadline mode.",
-  },
-  {
-    title: "Green execution",
-    description:
-      "GreenWin schedules runtime in cleaner energy windows automatically.",
-  },
-];
+import EuropeMap from "@/assets/EuropeMap.png";
+import GreenEnergy from "@/assets/GreenEnergy.png";
+import RedEnergy from "@/assets/RedEnergy.png";
 
 export function NavLink({ href, children }: any) {
   const pathname = usePathname();
@@ -103,7 +90,7 @@ export default function Home() {
           </div>
           <div className="hidden items-center gap-10 md:flex">
             <NavLink href="/tasks">Jobs</NavLink>
-            <NavLink href="/stats">States</NavLink>
+            <NavLink href="/stats">Stats</NavLink>
             <ProfileDropdown />
           </div>
         </nav>
@@ -143,10 +130,10 @@ export default function Home() {
 
         <section
           id="efficiency"
-          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40"
+          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40 shadow-custom"
         >
           <div className="text-center gap-6 flex flex-col items-center justify-center">
-            <p className="heading2 text-base-800">Efficiency By Design</p>
+            <p className="heading3 text-base-800">Efficiency By Design</p>
             <p className="body2-light text-base-700 max-w-3xl">
               Our intelligent engine continuously monitors global power grids to
               ensure your compute power leaves zero traces.
@@ -176,13 +163,13 @@ export default function Home() {
 
         <section id="advantages" className="w-auto px-24 py-20">
           <div className="px-10 w-fit">
-            <div className="bg-secondary-900 px-10 py-5 rounded-t-lg">
+            <div className="bg-secondary-900 px-10 py-5 rounded-t-lg shadow-custom">
               <p className="heading5 text-base-100">Advantages</p>
             </div>
           </div>
 
           <div className="grid grid-cols-[1fr_80px_1fr] items-center">
-            <div className="p-12 flex flex-row gap-10 bg-base-100 rounded-lg">
+            <div className="p-12 flex flex-row gap-10 bg-base-100 rounded-lg shadow-custom z-0">
               <div className="flex flex-col gap-4">
                 <p className="heading6 text-secondary-900">
                   ESG-Ready Reporting
@@ -195,9 +182,9 @@ export default function Home() {
               <img src="/Stat.svg" alt="Stat" className="w-50" />
             </div>
 
-            <div className="p-12 flex justify-center items-center w-20 h-18 bg-base-100"></div>
+            <div className="p-12 flex justify-center items-center w-20 h-12 bg-base-100 shadow-custom"></div>
 
-            <div className="p-12 h-full flex flex-row gap-10 justify-center items-center bg-secondary-900 rounded-lg">
+            <div className="p-12 h-full flex flex-row gap-10 justify-center items-center bg-secondary-900 rounded-lg shadow-custom z-0">
               <div className="w-30 h-20 rounded-lg bg-base-100/10 grid place-items-center">
                 <img src="/Clock.svg" alt="Clock" className="w-10" />
               </div>
@@ -208,6 +195,21 @@ export default function Home() {
                   your data is needed.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="w-auto px-24">
+          <div className="bg-base-100 rounded-xl px-26 py-22 flex flex-row shadow-custom">
+            <div className="flex flex-col gap-8">
+              <p className="heading5 text-base-900 px-3">
+                Real-time Carbon Intensity Mapping
+              </p>
+              <img src={EuropeMap.src} alt="Europe Map" className="w-200" />
+            </div>
+            <div className="flex flex-col gap-8 -ml-24">
+              <img src={GreenEnergy.src} alt="GreenEnery" />
+              <img src={RedEnergy.src} alt="RedEnergy" />
             </div>
           </div>
         </section>
