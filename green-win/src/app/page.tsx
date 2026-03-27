@@ -131,7 +131,7 @@ export default function Home() {
 
         <section
           id="efficiency"
-          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40 shadow-custom"
+          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-36 shadow-custom"
         >
           <div className="text-center gap-6 flex flex-col items-center justify-center">
             <p className="heading3 text-base-800">Efficiency By Design</p>
@@ -145,19 +145,19 @@ export default function Home() {
               title="Real-time carbon mapping"
               description="Continuously evaluates regions and providers based on cleaner energy mix."
               number={1}
-              icon="/File.svg"
+              src="/File.svg"
             />
             <HowItWorksCard
               title="Automatic scheduling"
               description="Decides immediate run or delayed execution windows against your deadlines."
               number={2}
-              icon="/Analysis.svg"
+              src="/Analysis.svg"
             />
             <HowItWorksCard
               title="Cost and impact reporting"
               description="Keeps status, region and estimated CO2 savings in one management workspace."
               number={3}
-              icon="/Flash.svg"
+              src="/Flash.svg"
             />
           </div>
         </section>
