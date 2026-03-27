@@ -32,7 +32,7 @@ body {
   --color-secondary-800: #006575;
   --color-secondary-900: #00424d;
 
-  --color-base-100: #d1d1d1;
+  --color-base-100: #fbfef9;
   --color-base-200: #dde1db;
   --color-base-300: #c0c5be;
   --color-base-400: #a3a8a1;
@@ -72,6 +72,8 @@ body {
   --text-paragraph1--line-height: 24px;
   --text-caption1: 12px;
   --text-caption1--line-height: 16px;
+
+  --shadow-custom: 0 0 12px rgba(0, 0, 0, 0.12);
 }
 
 @layer base {
@@ -132,5 +134,13 @@ body {
   }
   .caption1-underlined {
     @apply text-caption1 font-normal underline;
+  }
+
+  .base-input {
+    @apply flex w-full items-center rounded-sm p-3 gap-3;
+  }
+
+  .base-button {
+    @apply w-95 rounded-sm px-3 py-4 flex gap-3 items-center justify-center text-body1 font-normal font-secondary transition-colors duration-300 ease-out;
   }
 }
