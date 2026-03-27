@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
 
 const steps = [
   {
@@ -142,46 +143,34 @@ export default function Home() {
 
         <section
           id="features"
-          className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-10 sm:py-20"
+          className="flex flex-col gap-28 rounded-xl bg-base-100 mx-24 w-auto px-26 py-40"
         >
-          <div className="mb-8 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              Efficiency by design
+          <div className="text-center gap-6 flex flex-col items-center justify-center">
+            <p className="heading2 text-base-800">Efficiency By Design</p>
+            <p className="body2-light text-base-700 max-w-3xl">
+              Our intelligent engine continuously monitors global power grids to
+              ensure your compute power leaves zero traces.
             </p>
-            <h2 className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">
-              Built for clean operations
-            </h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <FeatureCard
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <HowItWorksCard
               title="Real-time carbon mapping"
               description="Continuously evaluates regions and providers based on cleaner energy mix."
+              number={1}
+              icon="/File.svg"
             />
-            <FeatureCard
+            <HowItWorksCard
               title="Automatic scheduling"
               description="Decides immediate run or delayed execution windows against your deadlines."
+              number={2}
+              icon="/Analysis.svg"
             />
-            <FeatureCard
+            <HowItWorksCard
               title="Cost and impact reporting"
               description="Keeps status, region and estimated CO2 savings in one management workspace."
+              number={3}
+              icon="/Flash.svg"
             />
-          </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            <Panel className="bg-gradient-to-br from-[#0b2746] to-[#0e3558] text-white lg:col-span-2">
-              <p className="text-sm font-semibold">
-                Real-time carbon intensity mapping
-              </p>
-              <p className="mt-2 text-sm text-cyan-100">
-                Continuously select execution windows where grid intensity is
-                lower.
-              </p>
-            </Panel>
-            <Panel className="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white">
-              <p className="text-sm font-semibold">Automated scheduling</p>
-              <p className="mt-2 text-sm text-emerald-100">
-                Immediate and deadline workloads, managed automatically.
-              </p>
-            </Panel>
           </div>
         </section>
 
@@ -300,23 +289,6 @@ function Stat({ title, value }: { title: string; value: string }) {
         {title}
       </p>
       <p className="mt-1 text-xl font-semibold text-slate-900">{value}</p>
-    </article>
-  );
-}
-
-function FeatureCard({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <article className="rounded-2xl bg-white p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">
-        {description}
-      </p>
     </article>
   );
 }
