@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PayloadPreview } from "@/components/task-upload/PayloadPreview";
 import { TaskUploadForm } from "@/components/task-upload/TaskUploadForm";
 import { createTask } from "@/lib/task/api";
@@ -12,6 +13,7 @@ import { fetchProjects, ProjectOption } from "@/lib/projects/api";
 import { BackLink, PageHeader, PageShell } from "@/components/ui/primitives";
 
 export default function NewTaskPage() {
+  const router = useRouter();
   const [form, setForm] = useState<TaskFormState>(INITIAL_TASK_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -95,6 +97,11 @@ export default function NewTaskPage() {
       await createTask(payload, normalizedForm);
       setSuccessMessage("Task uploaded successfully.");
       showSuccess("Task uploaded successfully.");
+      const projectId = normalizedForm.projectId.trim();
+      const path = projectId
+        ? `/tasks?projectId=${encodeURIComponent(projectId)}`
+        : "/tasks";
+      router.replace(path);
     } catch (error) {
       const message =
         error instanceof Error

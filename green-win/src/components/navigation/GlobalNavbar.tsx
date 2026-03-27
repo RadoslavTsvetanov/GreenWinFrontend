@@ -15,6 +15,7 @@ export function GlobalNavbar() {
   const isHome = pathname === "/";
   const isTasksRoute = pathname.startsWith("/tasks");
   const isProjectsRoute = pathname.startsWith("/projects");
+  const isCompanySettingsRoute = pathname.startsWith("/settings/organization");
   const isAuthRoute = pathname.startsWith("/auth");
   const initials = (user?.name || user?.email || "U").trim().charAt(0).toUpperCase();
 
@@ -108,6 +109,18 @@ export function GlobalNavbar() {
                     role="menuitem"
                   >
                     New task
+                  </Link>
+                  <Link
+                    href="/settings/organization"
+                    className={`block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 ${
+                      isCompanySettingsRoute
+                        ? "font-semibold text-emerald-800"
+                        : "text-slate-700"
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                    role="menuitem"
+                  >
+                    Company profile
                   </Link>
                   <Link
                     href="/"

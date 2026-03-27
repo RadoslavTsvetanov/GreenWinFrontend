@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/tasks", "/projects"];
+const PROTECTED_PREFIXES = ["/tasks", "/projects", "/settings"];
 const GUEST_ONLY_PREFIXES = ["/auth/login", "/auth/register"];
 const TOKEN_COOKIE_KEY = "greenwin_token";
 
@@ -31,5 +31,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tasks/:path*", "/projects/:path*", "/auth/login", "/auth/register"],
+  matcher: [
+    "/tasks/:path*",
+    "/projects/:path*",
+    "/settings/:path*",
+    "/auth/login",
+    "/auth/register",
+  ],
 };
