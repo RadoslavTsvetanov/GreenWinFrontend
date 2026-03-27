@@ -1,9 +1,4 @@
-import {
-  AuthSession,
-  AuthUser,
-  LoginPayload,
-  RegisterPayload,
-} from "./types";
+import { AuthSession, AuthUser, LoginPayload, RegisterPayload } from "./types";
 import { readSession, saveSession } from "./storage";
 
 function getApiBase() {
@@ -79,9 +74,7 @@ async function requestAuth(
       body: JSON.stringify(body),
     });
   } catch {
-    throw new Error(
-      "Cannot reach backend API.",
-    );
+    throw new Error("Cannot reach backend API.");
   }
 
   if (!response.ok) {
@@ -120,9 +113,7 @@ export async function refreshSession(): Promise<AuthSession> {
       },
     });
   } catch {
-    throw new Error(
-      "Cannot reach backend API.",
-    );
+    throw new Error("Cannot reach backend API.");
   }
 
   if (!response.ok) {
