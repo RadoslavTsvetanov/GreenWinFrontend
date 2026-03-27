@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { TaskFormState } from "@/lib/task/types";
 import { TaskFormChangeHandler } from "./types";
+import { Button, Input } from "@/components/ui/primitives";
 
 type RuntimeSectionProps = {
   form: TaskFormState;
@@ -21,22 +22,16 @@ export function RuntimeSection({ form, onChange }: RuntimeSectionProps) {
     if (incomingFiles.length === 0) {
       return;
     }
-
-    const existingKeys = new Set(
-      form.lambdaFiles.map((file) => `${file.name}-${file.size}-${file.lastModified}`),
-    );
-    const uniqueIncoming = incomingFiles.filter(
-      (file) => !existingKeys.has(`${file.name}-${file.size}-${file.lastModified}`),
-    );
-
-    onChange("lambdaFiles", [...form.lambdaFiles, ...uniqueIncoming]);
+    const zipFile =
+      incomingFiles.find((file) => file.name.toLowerCase().endsWith(".zip")) ?? null;
+    if (!zipFile) {
+      return;
+    }
+    onChange("lambdaFiles", [zipFile]);
   };
 
-  const removeFile = (targetIndex: number) => {
-    onChange(
-      "lambdaFiles",
-      form.lambdaFiles.filter((_, index) => index !== targetIndex),
-    );
+  const removeFile = () => {
+    onChange("lambdaFiles", []);
   };
 
   const clearFiles = () => {
@@ -48,34 +43,52 @@ export function RuntimeSection({ form, onChange }: RuntimeSectionProps) {
 
   const totalSizeMB = (form.lambdaFiles.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2);
 
+  const onDropZoneClick = (event: MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.closest("button")) return;
+    openFilePicker();
+  };
+
+  const onDropZoneKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openFilePicker();
+    }
+  };
+
   return (
     <>
       <div>
         <p className="block text-sm font-medium text-slate-800">Runtime type *</p>
         <div className="mt-2 flex gap-3">
-          <button
+          <Button
             type="button"
             onClick={() => onChange("runtimeType", "lambda_code")}
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+            variant="secondary"
+            className={`${
               form.runtimeType === "lambda_code"
                 ? "border-emerald-400 bg-emerald-100 text-emerald-900"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                : ""
             }`}
           >
             Lambda code
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            onClick={() => onChange("runtimeType", "docker_image")}
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${
+            disabled
+            variant="secondary"
+            className={`${
               form.runtimeType === "docker_image"
                 ? "border-emerald-400 bg-emerald-100 text-emerald-900"
-                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                : "bg-slate-100 text-slate-400"
             }`}
           >
-            Docker image
-          </button>
+            Docker image (coming soon)
+          </Button>
         </div>
+        <p className="mt-2 text-xs text-slate-500">
+          Current backend task creation expects Lambda zip uploads.
+        </p>
       </div>
 
       {form.runtimeType === "lambda_code" ? (
@@ -87,17 +100,21 @@ export function RuntimeSection({ form, onChange }: RuntimeSectionProps) {
             ref={fileInputRef}
             id="lambdaFiles"
             type="file"
-            multiple
+            accept=".zip,application/zip,application/x-zip-compressed"
             onChange={(event) => addFiles(Array.from(event.target.files ?? []))}
             className="hidden"
           />
 
           <div
-            className={`mt-2 rounded-2xl border-2 border-dashed p-4 transition ${
+            tabIndex={0}
+            aria-label="Choose Lambda zip file or drag and drop here"
+            className={`mt-2 cursor-pointer rounded-2xl border-2 border-dashed px-5 py-8 transition outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 ${
               isDragging
-                ? "border-emerald-400 bg-emerald-50"
-                : "border-slate-300 bg-slate-50/80"
+                ? "border-emerald-400 bg-emerald-50/90"
+                : "border-slate-300/90 bg-gradient-to-b from-slate-50/90 to-white hover:border-slate-400 hover:bg-slate-50/70"
             }`}
+            onClick={onDropZoneClick}
+            onKeyDown={onDropZoneKeyDown}
             onDragOver={(event) => {
               event.preventDefault();
               setIsDragging(true);
@@ -109,67 +126,67 @@ export function RuntimeSection({ form, onChange }: RuntimeSectionProps) {
               addFiles(Array.from(event.dataTransfer.files ?? []));
             }}
           >
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-slate-700">
-                Drag and drop files here, or add from your computer.
+            <div className="mx-auto max-w-md text-center">
+              <p className="text-sm font-semibold text-slate-800">
+                Drag and drop your Lambda zip here
               </p>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={openFilePicker}
-                  className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700"
-                >
-                  Add files
-                </button>
-                {form.lambdaFiles.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearFiles}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                  >
-                    Clear all
-                  </button>
-                )}
-              </div>
+              <p className="mt-1.5 text-xs text-slate-600">
+                Or click anywhere in this area to choose a file from your computer.
+              </p>
+              <p className="mt-2 text-[11px] text-slate-500">
+                One .zip file per task (multipart field matches API upload).
+              </p>
             </div>
 
-            {form.lambdaFiles.length === 0 ? (
-              <p className="mt-3 text-xs text-slate-500">
-                No files selected yet. Add `index.js`, `package.json`, and all helper files.
-              </p>
-            ) : (
-              <>
-                <div className="mt-3 flex items-center gap-2 text-xs text-emerald-700">
-                  <span className="rounded-full bg-emerald-100 px-2 py-1 font-medium">
-                    {form.lambdaFiles.length} files ready
+            {form.lambdaFiles.length > 0 && (
+              <div className="mt-6 space-y-3 border-t border-slate-200/80 pt-5">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-emerald-700">
+                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-medium">
+                    Zip ready
                   </span>
-                  <span className="rounded-full bg-cyan-100 px-2 py-1 font-medium text-cyan-800">
+                  <span className="rounded-full border border-cyan-200 bg-cyan-50 px-2.5 py-1 font-medium text-cyan-800">
                     {totalSizeMB} MB total
                   </span>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      clearFiles();
+                    }}
+                    className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                  >
+                    Clear
+                  </button>
                 </div>
-                <ul className="mt-3 space-y-2">
-                  {form.lambdaFiles.map((file, index) => (
+                <ul className="mx-auto max-w-lg space-y-2">
+                  {form.lambdaFiles.map((file) => (
                     <li
                       key={`${file.name}-${file.size}-${file.lastModified}`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2"
+                      className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white/90 px-3 py-2.5 shadow-sm"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="min-w-0">
+                      <div className="min-w-0 text-left">
                         <p className="truncate text-sm font-medium text-slate-800">{file.name}</p>
                         <p className="text-xs text-slate-500">
                           {(file.size / 1024).toFixed(1)} KB
                         </p>
                       </div>
-                      <button
+                      <Button
                         type="button"
-                        onClick={() => removeFile(index)}
-                        className="rounded-md px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
+                        onClick={() => removeFile()}
+                        size="sm"
+                        variant="ghost"
+                        className="shrink-0 text-red-600 hover:bg-red-50"
                       >
                         Remove
-                      </button>
+                      </Button>
                     </li>
                   ))}
                 </ul>
-              </>
+                <p className="text-center text-[11px] text-slate-500">
+                  Click the dashed area above to replace the file.
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -178,12 +195,12 @@ export function RuntimeSection({ form, onChange }: RuntimeSectionProps) {
           <label htmlFor="dockerImage" className="block text-sm font-medium text-slate-800">
             Docker image URL *
           </label>
-          <input
+          <Input
             id="dockerImage"
             type="text"
             value={form.dockerImage ?? ""}
-            onChange={(event) => onChange("dockerImage", event.target.value)}
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+            onChange={(value) => onChange("dockerImage", value)}
+            className="mt-2 bg-slate-50"
             placeholder="ghcr.io/org/image:latest"
           />
         </div>

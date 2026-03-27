@@ -1,4 +1,5 @@
 import { CreateTaskPayload, TaskFormState } from "./types";
+import { readSession } from "../auth/storage";
 
 export function canSubmitTaskForm(form: TaskFormState): boolean {
   const hasRuntime =
@@ -11,37 +12,33 @@ export function canSubmitTaskForm(form: TaskFormState): boolean {
 
   return (
     Boolean(form.taskName.trim()) &&
+    Boolean(form.projectId) &&
     hasRuntime &&
-    form.preferredClouds.length > 0 &&
-    form.preferredRegions.length > 0 &&
     hasRequiredDeadline
   );
 }
 
 export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
-  return {
+  const session = readSession();
+  if (!session?.user?.id) {
+    throw new Error("Please login first.");
+  }
+
+  const payload: CreateTaskPayload = {
     name: form.taskName.trim(),
-    runtimeType: form.runtimeType,
-    runtime:
-      form.runtimeType === "lambda_code"
-        ? {
-            lambdaFiles: form.lambdaFiles.map((file) => ({
-              name: file.name,
-              size: file.size,
-              type: file.type,
-            })),
-          }
-        : { dockerImage: form.dockerImage.trim() },
-    executionMode: form.executionMode,
-    deadline:
-      form.executionMode === "deadline"
-        ? new Date(form.deadline).toISOString()
-        : null,
-    preferences: {
-      clouds: form.preferredClouds,
-      regions: form.preferredRegions,
-      priority: form.priority,
-    },
-    notes: form.notes.trim() || null,
+    description: form.notes.trim() || undefined,
+    codeType: form.runtimeType === "lambda_code" ? "lambda" : "docker",
+    ownerId: session.user.id,
+    projectId: form.projectId,
   };
+
+  if (form.runtimeType === "docker_image") {
+    payload.dockerImage = form.dockerImage.trim();
+  }
+
+  if (form.executionMode === "deadline" && form.deadline) {
+    payload.latestFinishAt = new Date(form.deadline).toISOString();
+  }
+
+  return payload;
 }
