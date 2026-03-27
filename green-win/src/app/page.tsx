@@ -243,7 +243,10 @@ export default function Home() {
 
         <footer className="border-t bg-primary-900 pt-30 pb-16 flex flex-col gap-23 text-xs text-base-100 px-24">
           <div className="text-base-100 flex flex-col gap-6">
-            <p className="heading7 ">Green Win</p>
+            <div className="flex flex-row gap-2">
+              <img src="/greenwin-logo.svg" alt="Logo" />
+              <p className="heading7 text-base-100">Green Win</p>
+            </div>
             <p className="paragraph1-light max-w-55">
               Optimizing the world's compute resources for a sustainable, net-
               zero future.
