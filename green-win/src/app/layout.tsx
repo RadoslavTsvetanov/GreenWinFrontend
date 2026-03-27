@@ -31,10 +31,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${primaryFont.variable} ${secondaryFont.variable} h-full`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-slate-50 text-slate-900"
+      >
         <AuthProvider>
           <ToastProvider>
-            <GlobalNavbar />
             <main className="flex-1">{children}</main>
           </ToastProvider>
         </AuthProvider>

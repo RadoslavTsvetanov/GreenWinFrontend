@@ -5,7 +5,7 @@ export enum ButtonVariant {
 
 export type ButtonProps = {
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: ButtonVariant;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
