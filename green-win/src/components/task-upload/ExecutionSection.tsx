@@ -8,6 +8,7 @@ type ExecutionSectionProps = {
 };
 
 export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
+  const isImmediate = form.executionMode === "immediate";
   const isScheduled = form.executionMode === "deadline";
 
   return (
@@ -82,7 +83,9 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
                 }
                 className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
               >
-                <option value="once">Once</option>
+                <option value="once">
+                  {isScheduled ? "Once (pick time)" : "Once (run now)"}
+                </option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -108,25 +111,28 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
               </div>
             ) : form.strategyPeriodicity === "once" ? (
               <div className="space-y-2">
-                <div>
-                  <label
-                    htmlFor="strategyExecutionTime"
-                    className="block text-sm font-medium text-slate-800"
-                  >
-                    Planned execution time (UTC, HH:mm)
-                  </label>
-                  <Input
-                    id="strategyExecutionTime"
-                    type="time"
-                    value={form.strategyExecutionTime}
-                    onChange={(value) => onChange("strategyExecutionTime", value)}
-                    className="mt-2 bg-white"
-                  />
-                </div>
-                <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-                  ONCE strategy executes immediately when activated. For automatic delayed runs,
-                  prefer DAILY/WEEKLY/MONTHLY and activate on create.
-                </div>
+                {isImmediate ? (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+                    Immediate mode selected: ONCE runs right now on activation (no date/time input
+                    required).
+                  </div>
+                ) : (
+                  <div>
+                    <label
+                      htmlFor="strategyExecutionTime"
+                      className="block text-sm font-medium text-slate-800"
+                    >
+                      Planned execution time (UTC, HH:mm)
+                    </label>
+                    <Input
+                      id="strategyExecutionTime"
+                      type="time"
+                      value={form.strategyExecutionTime}
+                      onChange={(value) => onChange("strategyExecutionTime", value)}
+                      className="mt-2 bg-white"
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <div>

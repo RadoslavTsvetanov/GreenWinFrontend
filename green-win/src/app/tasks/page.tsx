@@ -91,10 +91,12 @@ function TasksPageContent() {
             latestExecution?.region && latestExecution.region.trim().length > 0
               ? latestExecution.region
               : null;
-          const estimatedCo2SavedGrams =
-            typeof latestExecution?.metrics?.estimatedEmissionsGco2 === "number"
-              ? latestExecution.metrics.estimatedEmissionsGco2
-              : null;
+          const estimatedCo2SavedGrams = Array.isArray(task.executions) && task.executions.length > 0
+            ? task.executions.reduce(
+                (sum, e) => sum + (typeof e?.metrics?.estimatedEmissionsGco2 === "number" ? e.metrics.estimatedEmissionsGco2 : 0),
+                0,
+              )
+            : null;
 
           return {
             id: String(task.id ?? ""),

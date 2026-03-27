@@ -6,7 +6,11 @@ import { PayloadPreview } from "@/components/task-upload/PayloadPreview";
 import { TaskUploadForm } from "@/components/task-upload/TaskUploadForm";
 import { createTask } from "@/lib/task/api";
 import { readSession } from "@/lib/auth/storage";
-import { activateStrategy, fetchTaskStrategies } from "@/lib/task-strategies/api";
+import {
+  activateStrategy,
+  fetchTaskStrategies,
+  invokeStrategyNow,
+} from "@/lib/task-strategies/api";
 import { INITIAL_TASK_FORM_STATE } from "@/lib/task/constants";
 import { buildCreateTaskPayload, canSubmitTaskForm } from "@/lib/task/validation";
 import { TaskFormState } from "@/lib/task/types";
@@ -101,7 +105,16 @@ export default function NewTaskPage() {
       return;
     }
 
-    const payload = buildCreateTaskPayload(normalizedForm);
+    const effectiveForm: TaskFormState =
+      normalizedForm.executionMode === "immediate" && !normalizedForm.attachStrategy
+        ? {
+            ...normalizedForm,
+            attachStrategy: true,
+            strategyPeriodicity: "once",
+          }
+        : normalizedForm;
+
+    const payload = buildCreateTaskPayload(effectiveForm);
     setPayloadPreview(JSON.stringify(payload, null, 2));
     setIsSubmitting(true);
     setErrorMessage("");
@@ -110,15 +123,27 @@ export default function NewTaskPage() {
     try {
       const created = await createTask(payload, normalizedForm);
 
+      const shouldActivateAfterCreate =
+        effectiveForm.attachStrategy &&
+        created.id &&
+        (effectiveForm.activateStrategyOnCreate ||
+          (effectiveForm.executionMode === "immediate" &&
+            effectiveForm.strategyPeriodicity === "once"));
+
       if (
-        normalizedForm.attachStrategy &&
-        normalizedForm.activateStrategyOnCreate &&
-        created.id
+        shouldActivateAfterCreate
       ) {
         const strategies = await fetchTaskStrategies(created.id);
         const newest = strategies[strategies.length - 1];
         if (newest?.id) {
-          await activateStrategy(newest.id);
+          if (
+            effectiveForm.executionMode === "immediate" &&
+            effectiveForm.strategyPeriodicity === "once"
+          ) {
+            await invokeStrategyNow(newest.id);
+          } else {
+            await activateStrategy(newest.id);
+          }
         }
       }
 

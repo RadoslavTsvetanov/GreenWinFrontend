@@ -202,7 +202,7 @@ export default function TaskDetailsPage() {
         periodicity: "once",
         executionTime: `${hh}:${mm}`,
       });
-      await activateStrategy(strategy.id);
+      await invokeStrategyNow(strategy.id);
       await refreshRelatedData();
     } catch (error) {
       const message =

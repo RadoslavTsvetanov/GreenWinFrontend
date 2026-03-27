@@ -23,7 +23,9 @@ export function canSubmitTaskForm(form: TaskFormState): boolean {
   const strategyValid = !form.attachStrategy
     ? true
     : form.strategyPeriodicity === "once"
-      ? Boolean(form.strategyExecutionTime)
+      ? form.executionMode === "immediate"
+        ? true
+        : Boolean(form.strategyExecutionTime)
       : form.strategyPeriodicity === "daily"
         ? form.strategyTimesCsv
             .split(",")
@@ -61,6 +63,11 @@ export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
   }
 
   if (form.attachStrategy) {
+    const now = new Date();
+    const currentUtcTime = `${String(now.getUTCHours()).padStart(2, "0")}:${String(
+      now.getUTCMinutes(),
+    ).padStart(2, "0")}`;
+
     const strategy = {
       periodicity: form.strategyPeriodicity,
       times:
@@ -72,7 +79,9 @@ export function buildCreateTaskPayload(form: TaskFormState): CreateTaskPayload {
           : undefined,
       executionTime:
         form.strategyPeriodicity === "once"
-          ? form.strategyExecutionTime || undefined
+          ? form.executionMode === "immediate"
+            ? currentUtcTime
+            : form.strategyExecutionTime || undefined
           : form.strategyPeriodicity === "daily"
           ? undefined
           : form.strategyExecutionTime || undefined,
