@@ -4,7 +4,7 @@ export function TaskStats({ tasks }: { tasks: ManagedTask[] }) {
   const total = tasks.length;
   const running = tasks.filter((task) => task.status === "running").length;
   const scheduled = tasks.filter((task) => task.status === "scheduled").length;
-  const co2Saved = tasks.reduce((acc, task) => acc + task.estimatedCo2SavedGrams, 0);
+  const co2Saved = tasks.reduce((acc, task) => acc + (task.estimatedCo2SavedGrams ?? 0), 0);
 
   const items = [
     { label: "Total tasks", value: total },

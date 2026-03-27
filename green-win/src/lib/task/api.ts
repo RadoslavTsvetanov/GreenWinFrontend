@@ -1,27 +1,21 @@
 import { CreateTaskPayload, TaskFormState } from "./types";
+import { authorizedApiFetch, ensureOk } from "../api/http";
 
 export async function createTask(
   payload: CreateTaskPayload,
   form: TaskFormState,
 ): Promise<void> {
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || "";
-  const endpoint = `${apiBase}/api/tasks`;
-
-  const response =
-    form.runtimeType === "lambda_code"
-      ? await fetch(endpoint, {
-          method: "POST",
-          body: buildMultipartPayload(payload, form.lambdaFiles),
-        })
-      : await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-  if (!response.ok) {
-    throw new Error(`Upload failed with status ${response.status}`);
+  if (form.lambdaFiles.length === 0) {
+    throw new Error("Please upload one Lambda zip file.");
   }
+
+  const response = await authorizedApiFetch("/tasks", {
+      method: "POST",
+      headers: {},
+      body: buildMultipartPayload(payload, form.lambdaFiles),
+    });
+
+  await ensureOk(response);
 }
 
 function buildMultipartPayload(
@@ -29,7 +23,9 @@ function buildMultipartPayload(
   files: File[],
 ): FormData {
   const formData = new FormData();
-  formData.append("task", JSON.stringify(payload));
-  files.forEach((file) => formData.append("lambdaFiles", file));
+  formData.append("data", JSON.stringify(payload));
+  if (files.length > 0) {
+    formData.append("lambdaZip", files[0]);
+  }
   return formData;
 }
