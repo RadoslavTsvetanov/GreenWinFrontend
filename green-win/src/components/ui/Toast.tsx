@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 type ToastVariant = "error" | "success" | "info";
 
@@ -18,29 +18,58 @@ type ToastContextValue = {
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
+function normalizeToastMessage(input: string): string {
+  const trimmed = (input || "").trim();
+  if (!trimmed) return "";
+
+  const lower = trimmed.toLowerCase();
+  if (
+    lower.includes("<html") ||
+    lower.includes("<body") ||
+    lower.includes("<!doctype html") ||
+    lower.includes("502 bad gateway") ||
+    lower.includes("nginx")
+  ) {
+    return "Backend temporarily unavailable (502 Bad Gateway). Please try again.";
+  }
+
+  const withoutTags = trimmed.replace(/<[^>]+>/g, " ");
+  const compact = withoutTags.replace(/\s+/g, " ").trim();
+  if (!compact) return "";
+  if (compact.length > 220) {
+    return `${compact.slice(0, 217)}...`;
+  }
+  return compact;
+}
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastOptions[]>([]);
 
-  function addToast(message: string, variant: ToastVariant) {
-    if (!message) return;
+  const addToast = useCallback((message: string, variant: ToastVariant) => {
+    const normalized = normalizeToastMessage(message);
+    if (!normalized) return;
 
     setToasts((current) => {
+      // Avoid stacking repeated identical errors.
+      if (current.some((item) => item.message === normalized && item.variant === variant)) {
+        return current;
+      }
       const id = Date.now();
-      return [...current, { id, message, variant }];
+      return [...current, { id, message: normalized, variant }];
     });
-  }
+  }, []);
 
-  function showError(message: string) {
+  const showError = useCallback((message: string) => {
     addToast(message, "error");
-  }
+  }, [addToast]);
 
-  function showSuccess(message: string) {
+  const showSuccess = useCallback((message: string) => {
     addToast(message, "success");
-  }
+  }, [addToast]);
 
-  function showInfo(message: string) {
+  const showInfo = useCallback((message: string) => {
     addToast(message, "info");
-  }
+  }, [addToast]);
 
   useEffect(() => {
     if (toasts.length === 0) return;
@@ -60,11 +89,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     };
   }, [toasts]);
 
-  const value: ToastContextValue = {
-    showError,
-    showSuccess,
-    showInfo,
-  };
+  const value: ToastContextValue = useMemo(
+    () => ({
+      showError,
+      showSuccess,
+      showInfo,
+    }),
+    [showError, showSuccess, showInfo],
+  );
 
   return (
     <ToastContext.Provider value={value}>

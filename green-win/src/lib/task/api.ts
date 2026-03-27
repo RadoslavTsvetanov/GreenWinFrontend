@@ -4,7 +4,7 @@ import { authorizedApiFetch, ensureOk } from "../api/http";
 export async function createTask(
   payload: CreateTaskPayload,
   form: TaskFormState,
-): Promise<void> {
+): Promise<{ id: string }> {
   if (form.lambdaFiles.length === 0) {
     throw new Error("Please upload one Lambda zip file.");
   }
@@ -16,6 +16,8 @@ export async function createTask(
     });
 
   await ensureOk(response);
+  const created = (await response.json()) as { id?: string };
+  return { id: String(created.id ?? "") };
 }
 
 function buildMultipartPayload(

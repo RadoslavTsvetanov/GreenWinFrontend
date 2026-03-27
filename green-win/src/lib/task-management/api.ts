@@ -18,6 +18,21 @@ export type BackendTaskItem = {
   description?: string | null;
 };
 
+export type TaskDetailResponse = BackendTaskItem & {
+  summary?: {
+    provider?: string | null;
+    region?: string | null;
+    totalCo2Grams?: number;
+    totalEnergyKwh?: number;
+    executionMode?: string | null;
+    totalExecutions?: number;
+    successfulExecutions?: number;
+    failedExecutions?: number;
+    lastExecutedAt?: string | null;
+    lastRegion?: string | null;
+  };
+};
+
 export async function fetchTasks(ownerId?: string): Promise<BackendTaskItem[]> {
   const path = ownerId ? `/tasks/owner/${ownerId}` : "/tasks";
   const response = await authorizedApiFetch(path);
@@ -29,5 +44,22 @@ export async function fetchTaskById(taskId: string): Promise<BackendTaskItem> {
   const response = await authorizedApiFetch(`/tasks/${taskId}`);
   await ensureOk(response);
   return (await response.json()) as BackendTaskItem;
+}
+
+export async function fetchTaskDetail(taskId: string): Promise<TaskDetailResponse> {
+  const response = await authorizedApiFetch(`/tasks/${taskId}/detail`);
+  await ensureOk(response);
+  return (await response.json()) as TaskDetailResponse;
+}
+
+export async function fetchTaskStatus(taskId: string): Promise<{ id: string; status: string }> {
+  const response = await authorizedApiFetch(`/tasks/${taskId}/status`);
+  await ensureOk(response);
+  return (await response.json()) as { id: string; status: string };
+}
+
+export async function deleteTask(taskId: string): Promise<void> {
+  const response = await authorizedApiFetch(`/tasks/${taskId}`, { method: "DELETE" });
+  await ensureOk(response);
 }
 

@@ -10,6 +10,15 @@ function getApiBase() {
   return "/backend-api";
 }
 
+function isLikelyHtml(payload: string): boolean {
+  const trimmed = payload.trim().toLowerCase();
+  return (
+    trimmed.startsWith("<!doctype html") ||
+    trimmed.startsWith("<html") ||
+    trimmed.includes("<body")
+  );
+}
+
 function normalizeUser(raw: Record<string, unknown>): AuthUser {
   return {
     id: String(raw.id ?? ""),
@@ -86,6 +95,11 @@ async function requestAuth(
 
   if (!response.ok) {
     const text = await response.text();
+    if (isLikelyHtml(text)) {
+      throw new Error(
+        `Authentication service unavailable (${response.status} ${response.statusText || "Error"}).`,
+      );
+    }
     try {
       const parsed = JSON.parse(text) as { message?: string | string[] };
       const message = Array.isArray(parsed.message)
@@ -127,6 +141,11 @@ export async function refreshSession(): Promise<AuthSession> {
 
   if (!response.ok) {
     const text = await response.text();
+    if (isLikelyHtml(text)) {
+      throw new Error(
+        `Session refresh service unavailable (${response.status} ${response.statusText || "Error"}).`,
+      );
+    }
     throw new Error(text || `Refresh failed with status ${response.status}`);
   }
 

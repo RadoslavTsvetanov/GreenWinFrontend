@@ -2,17 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/Toast";
-import {
-  fetchExecutionsForTask,
-  invokeTaskNow,
-} from "@/lib/task-executions/api";
+import { fetchExecutionsForTask } from "@/lib/task-executions/api";
 import { TaskExecutionSummary } from "@/lib/task-executions/types";
 
 export function TaskExecutionsPanel({ taskId }: { taskId: string }) {
   const [executions, setExecutions] = useState<TaskExecutionSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isInvoking, setIsInvoking] = useState(false);
-  const { showError, showSuccess } = useToast();
+  const { showError } = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -46,41 +42,6 @@ export function TaskExecutionsPanel({ taskId }: { taskId: string }) {
     };
   }, [showError, taskId]);
 
-  const handleInvoke = async () => {
-    setIsInvoking(true);
-    try {
-      const result = await invokeTaskNow(taskId);
-      showSuccess("Task invoked.");
-      setExecutions((prev) => [
-        {
-          id: String(result["id"] ?? `exec-${Date.now()}`),
-          status: "pending",
-          provider: typeof result["provider"] === "string" ? result["provider"] : null,
-          region: typeof result["region"] === "string" ? result["region"] : null,
-          startedAt:
-            typeof result["startedAt"] === "string"
-              ? result["startedAt"]
-              : typeof result["startDate"] === "string"
-                ? result["startDate"]
-                : null,
-          finishedAt: null,
-          logsUri: typeof result["logsUri"] === "string" ? result["logsUri"] : null,
-          errorMessage:
-            typeof result["errorMessage"] === "string"
-              ? result["errorMessage"]
-              : null,
-        },
-        ...prev,
-      ]);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to invoke task.";
-      showError(message);
-    } finally {
-      setIsInvoking(false);
-    }
-  };
-
   return (
     <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -92,14 +53,9 @@ export function TaskExecutionsPanel({ taskId }: { taskId: string }) {
             Recent runs and their status.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleInvoke}
-          disabled={isInvoking}
-          className="rounded-lg bg-emerald-700 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isInvoking ? "Invoking..." : "Invoke now"}
-        </button>
+        <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+          Use strategy controls below to activate or invoke
+        </p>
       </div>
 
       <div className="mt-4 space-y-2">

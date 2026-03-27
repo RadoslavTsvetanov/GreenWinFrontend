@@ -13,6 +13,7 @@ export function GlobalNavbar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const isHome = pathname === "/";
+  const isDashboardRoute = pathname.startsWith("/dashboard");
   const isTasksRoute = pathname.startsWith("/tasks");
   const isProjectsRoute = pathname.startsWith("/projects");
   const isCompanySettingsRoute = pathname.startsWith("/settings/organization");
@@ -67,6 +68,12 @@ export function GlobalNavbar() {
           <div className="h-9 w-24 animate-pulse rounded-full bg-slate-100" />
         ) : isAuthenticated ? (
           <div className="relative flex items-center gap-2" ref={menuRef}>
+            <Link
+              href="/dashboard"
+              className={navLinkClass(isDashboardRoute)}
+            >
+              Dashboard
+            </Link>
             <Link
               href="/tasks"
               className={navLinkClass(isTasksRoute)}

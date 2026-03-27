@@ -10,7 +10,7 @@ import { readSession } from "@/lib/auth/storage";
 import { useToast } from "@/components/ui/Toast";
 import { fetchTasks } from "@/lib/task-management/api";
 import {
-  fetchProjectsDetailed,
+  fetchProjectsDetailedByOrganization,
   ProjectRecord,
 } from "@/lib/projects/api";
 import {
@@ -131,7 +131,8 @@ function TasksPageContent() {
     async function loadProjects() {
       setIsLoadingProjects(true);
       try {
-        const data = await fetchProjectsDetailed();
+        const orgId = readSession()?.user?.organizationId ?? null;
+        const data = await fetchProjectsDetailedByOrganization(orgId);
         if (cancelled) return;
         setProjects(data);
 
@@ -204,6 +205,9 @@ function TasksPageContent() {
           subtitle="Track, filter, and inspect scheduled jobs."
           actions={
             <>
+              <LinkButton href="/dashboard" variant="secondary">
+                Dashboard
+              </LinkButton>
               <LinkButton href="/tasks/new" variant="primary">
                 New task
               </LinkButton>

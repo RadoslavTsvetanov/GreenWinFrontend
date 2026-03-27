@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/tasks", "/projects", "/settings"];
+const PROTECTED_PREFIXES = ["/dashboard", "/tasks", "/projects", "/settings"];
 const GUEST_ONLY_PREFIXES = ["/auth/login", "/auth/register"];
 const TOKEN_COOKIE_KEY = "greenwin_token";
 
@@ -35,6 +35,8 @@ export const config = {
     "/tasks/:path*",
     "/projects/:path*",
     "/settings/:path*",
+    "/dashboard/:path*",
+    "/dashboard",
     "/auth/login",
     "/auth/register",
   ],

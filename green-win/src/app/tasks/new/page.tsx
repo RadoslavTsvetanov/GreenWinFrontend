@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { PayloadPreview } from "@/components/task-upload/PayloadPreview";
 import { TaskUploadForm } from "@/components/task-upload/TaskUploadForm";
 import { createTask } from "@/lib/task/api";
+import { readSession } from "@/lib/auth/storage";
+import { activateStrategy, fetchTaskStrategies } from "@/lib/task-strategies/api";
 import { INITIAL_TASK_FORM_STATE } from "@/lib/task/constants";
 import { buildCreateTaskPayload, canSubmitTaskForm } from "@/lib/task/validation";
 import { TaskFormState } from "@/lib/task/types";
@@ -33,6 +35,17 @@ export default function NewTaskPage() {
       dockerImage: form.dockerImage ?? "",
       deadline: form.deadline ?? "",
       notes: form.notes ?? "",
+      attachStrategy: form.attachStrategy ?? false,
+      strategyPeriodicity: form.strategyPeriodicity ?? "once",
+      strategyExecutionTime: form.strategyExecutionTime ?? "09:00",
+      strategyTimesCsv: form.strategyTimesCsv ?? "09:00",
+      strategyDayOfWeek: Number.isFinite(form.strategyDayOfWeek)
+        ? form.strategyDayOfWeek
+        : 1,
+      strategyDayOfMonth: Number.isFinite(form.strategyDayOfMonth)
+        ? form.strategyDayOfMonth
+        : 1,
+      activateStrategyOnCreate: form.activateStrategyOnCreate ?? false,
     }),
     [form],
   );
@@ -45,7 +58,8 @@ export default function NewTaskPage() {
     async function loadProjects() {
       setIsLoadingProjects(true);
       try {
-        const data = await fetchProjects();
+        const orgId = readSession()?.user?.organizationId ?? null;
+        const data = await fetchProjects(orgId);
         if (cancelled) return;
         setProjects(data);
         if (!form.projectId && data.length > 0) {
@@ -94,7 +108,20 @@ export default function NewTaskPage() {
     setSuccessMessage("");
 
     try {
-      await createTask(payload, normalizedForm);
+      const created = await createTask(payload, normalizedForm);
+
+      if (
+        normalizedForm.attachStrategy &&
+        normalizedForm.activateStrategyOnCreate &&
+        created.id
+      ) {
+        const strategies = await fetchTaskStrategies(created.id);
+        const newest = strategies[strategies.length - 1];
+        if (newest?.id) {
+          await activateStrategy(newest.id);
+        }
+      }
+
       setSuccessMessage("Task uploaded successfully.");
       showSuccess("Task uploaded successfully.");
       const projectId = normalizedForm.projectId.trim();

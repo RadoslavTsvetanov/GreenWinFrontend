@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useToast } from "@/components/ui/Toast";
-import { readSession } from "@/lib/auth/storage";
+import { useAuth } from "@/components/auth/AuthProvider";
 import {
   createProject,
-  fetchProjectsDetailed,
+  deleteProject,
+  fetchProjectsDetailedByOrganization,
   ProjectRecord,
+  updateProject,
 } from "@/lib/projects/api";
 import { saveSelectedProjectId } from "@/lib/projects/selection";
 import {
@@ -20,15 +22,17 @@ import {
 
 export default function ProjectsPage() {
   const { showError, showSuccess } = useToast();
+  const { user } = useAuth();
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [busyProjectId, setBusyProjectId] = useState<string | null>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [organizationIdInput, setOrganizationIdInput] = useState("");
 
-  const organizationIdFromSession = readSession()?.user?.organizationId ?? null;
+  const organizationIdFromSession = user?.organizationId ?? null;
   const organizationIdFromProjects = useMemo(
     () => projects.find((project) => project.organizationId)?.organizationId ?? null,
     [projects],
@@ -36,23 +40,36 @@ export default function ProjectsPage() {
   const resolvedOrganizationId =
     organizationIdFromSession || organizationIdFromProjects || organizationIdInput.trim() || "";
 
-  async function loadProjects() {
-    setIsLoading(true);
-    try {
-      const data = await fetchProjectsDetailed();
-      setProjects(data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to load projects.";
-      showError(message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadProjects();
-  }, []);
+    let cancelled = false;
+
+    async function run() {
+      setIsLoading(true);
+      try {
+        const data = await fetchProjectsDetailedByOrganization(
+          organizationIdFromSession,
+        );
+        if (!cancelled) {
+          setProjects(data);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          const message =
+            error instanceof Error ? error.message : "Failed to load projects.";
+          showError(message);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [organizationIdFromSession, showError]);
 
   const onCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -85,6 +102,40 @@ export default function ProjectsPage() {
       showError(message);
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleToggleProject = async (project: ProjectRecord) => {
+    setBusyProjectId(project.id);
+    try {
+      const updated = await updateProject(project.id, { isActive: !project.isActive });
+      setProjects((prev) => prev.map((item) => (item.id === project.id ? updated : item)));
+      showSuccess(
+        `Project "${updated.name}" ${updated.isActive ? "activated" : "deactivated"}.`,
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to update project.";
+      showError(message);
+    } finally {
+      setBusyProjectId(null);
+    }
+  };
+
+  const handleDeleteProject = async (project: ProjectRecord) => {
+    const confirmed = window.confirm(`Delete project "${project.name}"?`);
+    if (!confirmed) return;
+    setBusyProjectId(project.id);
+    try {
+      await deleteProject(project.id);
+      setProjects((prev) => prev.filter((item) => item.id !== project.id));
+      showSuccess(`Project "${project.name}" deleted.`);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete project.";
+      showError(message);
+    } finally {
+      setBusyProjectId(null);
     }
   };
 
@@ -144,22 +195,45 @@ export default function ProjectsPage() {
           ) : (
             <div className="mt-3 space-y-2">
               {projects.map((project) => (
-                <Link
+                <div
                   key={project.id}
-                  href={`/tasks?projectId=${encodeURIComponent(project.id)}`}
-                  className="group block rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition hover:border-emerald-300 hover:bg-emerald-50/40"
+                  className="group rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition hover:border-emerald-300 hover:bg-emerald-50/40"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-semibold text-slate-900">{project.name}</p>
-                    <span className="inline-flex min-w-24 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition group-hover:border-emerald-200 group-hover:bg-emerald-50 group-hover:text-emerald-700">
-                      <span>View tasks</span>
-                      <span aria-hidden="true">→</span>
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        disabled={busyProjectId === project.id}
+                        onClick={() => handleToggleProject(project)}
+                      >
+                        {project.isActive ? "Deactivate" : "Activate"}
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="danger"
+                        disabled={busyProjectId === project.id || project.name === "main"}
+                        onClick={() => handleDeleteProject(project)}
+                      >
+                        Delete
+                      </Button>
+                      <Link
+                        href={`/tasks?projectId=${encodeURIComponent(project.id)}`}
+                        className="inline-flex min-w-24 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition group-hover:border-emerald-200 group-hover:bg-emerald-50 group-hover:text-emerald-700"
+                      >
+                        <span>View tasks</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
                   </div>
                   <p className="mt-1 text-xs text-slate-500">
-                    {project.description || "No description"} | {project.tasksCount} tasks
+                    {project.description || "No description"} | {project.tasksCount} tasks |{" "}
+                    {project.isActive ? "active" : "inactive"}
                   </p>
-                </Link>
+                </div>
               ))}
             </div>
           )}

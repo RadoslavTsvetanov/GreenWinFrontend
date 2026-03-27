@@ -54,6 +54,131 @@ export function ExecutionSection({ form, onChange }: ExecutionSectionProps) {
           />
         </div>
       )}
+
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p className="text-sm font-medium text-slate-800">Strategy at creation</p>
+        <label className="mt-2 inline-flex items-center gap-2 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={form.attachStrategy}
+            onChange={(event) => onChange("attachStrategy", event.target.checked)}
+          />
+          Add strategy during task creation
+        </label>
+
+        {form.attachStrategy && (
+          <div className="mt-3 space-y-3">
+            <div>
+              <label
+                htmlFor="strategyPeriodicity"
+                className="block text-sm font-medium text-slate-800"
+              >
+                Strategy type
+              </label>
+              <select
+                id="strategyPeriodicity"
+                value={form.strategyPeriodicity}
+                onChange={(event) =>
+                  onChange("strategyPeriodicity", event.target.value as TaskFormState["strategyPeriodicity"])
+                }
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
+              >
+                <option value="once">Once</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+
+            {form.strategyPeriodicity === "daily" ? (
+              <div>
+                <label
+                  htmlFor="strategyTimesCsv"
+                  className="block text-sm font-medium text-slate-800"
+                >
+                  Times (UTC, comma-separated HH:mm)
+                </label>
+                <Input
+                  id="strategyTimesCsv"
+                  type="text"
+                  value={form.strategyTimesCsv}
+                  onChange={(value) => onChange("strategyTimesCsv", value)}
+                  placeholder="09:00, 14:30"
+                  className="mt-2 bg-white"
+                />
+              </div>
+            ) : form.strategyPeriodicity === "once" ? (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+                For one-time strategies, execution happens when you activate it. Time is auto-set
+                by the system in UTC.
+              </div>
+            ) : (
+              <div>
+                <label
+                  htmlFor="strategyExecutionTime"
+                  className="block text-sm font-medium text-slate-800"
+                >
+                  Execution time (UTC, HH:mm)
+                </label>
+                <Input
+                  id="strategyExecutionTime"
+                  type="time"
+                  value={form.strategyExecutionTime}
+                  onChange={(value) => onChange("strategyExecutionTime", value)}
+                  className="mt-2 bg-white"
+                />
+              </div>
+            )}
+
+            {form.strategyPeriodicity === "weekly" && (
+              <div>
+                <label
+                  htmlFor="strategyDayOfWeek"
+                  className="block text-sm font-medium text-slate-800"
+                >
+                  Day of week (0=Sun ... 6=Sat)
+                </label>
+                <Input
+                  id="strategyDayOfWeek"
+                  type="number"
+                  value={String(form.strategyDayOfWeek)}
+                  onChange={(value) => onChange("strategyDayOfWeek", Number(value))}
+                  className="mt-2 bg-white"
+                />
+              </div>
+            )}
+
+            {form.strategyPeriodicity === "monthly" && (
+              <div>
+                <label
+                  htmlFor="strategyDayOfMonth"
+                  className="block text-sm font-medium text-slate-800"
+                >
+                  Day of month (1-31)
+                </label>
+                <Input
+                  id="strategyDayOfMonth"
+                  type="number"
+                  value={String(form.strategyDayOfMonth)}
+                  onChange={(value) => onChange("strategyDayOfMonth", Number(value))}
+                  className="mt-2 bg-white"
+                />
+              </div>
+            )}
+
+            <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+              <input
+                type="checkbox"
+                checked={form.activateStrategyOnCreate}
+                onChange={(event) =>
+                  onChange("activateStrategyOnCreate", event.target.checked)
+                }
+              />
+              Activate strategy immediately after task is created
+            </label>
+          </div>
+        )}
+      </div>
     </>
   );
 }
