@@ -7,6 +7,7 @@ import HowItWorksCard from "@/components/landing-page/how-it-worrks-card";
 import EuropeMap from "@/assets/EuropeMap.png";
 import GreenEnergy from "@/assets/GreenEnergy.png";
 import RedEnergy from "@/assets/RedEnergy.png";
+import TickAndText from "@/components/landing-page/TickAndText";
 
 export function NavLink({ href, children }: any) {
   const pathname = usePathname();
@@ -79,7 +80,7 @@ export default function Home() {
         <img
           src="/BGimage.svg"
           alt="background"
-          className="w-full h-auto object-top"
+          className="w-full h-auto object-top "
         />{" "}
       </div>
 
@@ -169,7 +170,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-[1fr_80px_1fr] items-center">
-            <div className="p-12 flex flex-row gap-10 bg-base-100 rounded-lg shadow-custom z-0">
+            <div className="p-12 flex flex-row gap-10 bg-base-100 rounded-lg shadow-custom">
               <div className="flex flex-col gap-4">
                 <p className="heading6 text-secondary-900">
                   ESG-Ready Reporting
@@ -184,7 +185,7 @@ export default function Home() {
 
             <div className="p-12 flex justify-center items-center w-20 h-12 bg-base-100 shadow-custom"></div>
 
-            <div className="p-12 h-full flex flex-row gap-10 justify-center items-center bg-secondary-900 rounded-lg shadow-custom z-0">
+            <div className="p-12 h-full flex flex-row gap-10 justify-center items-center bg-secondary-900 rounded-lg shadow-custom">
               <div className="w-30 h-20 rounded-lg bg-base-100/10 grid place-items-center">
                 <img src="/Clock.svg" alt="Clock" className="w-10" />
               </div>
@@ -210,6 +211,29 @@ export default function Home() {
             <div className="flex flex-col gap-8 -ml-24">
               <img src={GreenEnergy.src} alt="GreenEnery" />
               <img src={RedEnergy.src} alt="RedEnergy" />
+            </div>
+          </div>
+        </section>
+
+        <section className="w-full bg-primary-200 py-32 pl-24">
+          <div className="max-w-137 flex flex-col gap-12">
+            <p className="heading2 text-primary-900 max-w-137">
+              Integrated With Your Workflow
+            </p>
+            <p className="body2-light text-base-700">
+              Our submission engine fits perfectly into your CI/CD pipelines. No
+              complex refactoring—just add a few parameters and let Green Win
+              handle the heavy lifting.
+            </p>
+            <div className="flex flex-col gap-8">
+              <TickAndText
+                title="Native Kubernetes Integration"
+                description="Deploy using standard Helm charts or Operators."
+              ></TickAndText>
+              <TickAndText
+                title="RESTful API Support"
+                description="Simple endpoints for any custom integration."
+              ></TickAndText>
             </div>
           </div>
         </section>
