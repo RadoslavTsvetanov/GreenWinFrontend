@@ -50,7 +50,7 @@ const LoginPage = () => {
     } else {
       setValidPassword(false);
       setErrorMessagePassword(
-        "Min 8 characters, uppercase, lowercase, number & special symbol",
+        "Min 8 characters, uppercase, lowercase & number",
       );
     }
   };
